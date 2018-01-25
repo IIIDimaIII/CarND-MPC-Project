@@ -89,8 +89,9 @@ int main() {
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
           Eigen::VectorXd eptsx(6);
           Eigen::VectorXd eptsy(6);
-          eptsx << ptsx;
-          eptsy << ptsy;
+          //!!!!!!!!!!!!!!!temp shortcut - find the proper way
+          eptsx << ptsx[0],ptsx[1],ptsx[2],ptsx[3],ptsx[4],ptsx[5];
+          eptsy << ptsy[0],ptsy[1],ptsy[2],ptsy[3],ptsy[4],ptsy[5];
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
