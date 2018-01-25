@@ -87,13 +87,17 @@ int main() {
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
+          Eigen::VectorXd eptsx(6);
+          Eigen::VectorXd eptsy(6);
+          eptsx << ptsx;
+          eptsy << ptsy;
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
           std::cout << ptsx[0] << std::endl;
           //approximate target x and y values for the space in between waypoints 
-          auto coeffs = polyfit(ptsx, ptsy, 3);
+          auto coeffs = polyfit(eptsx, eptsy, 3);
           double cte = polyeval(coeffs, px) - py;
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
@@ -102,8 +106,8 @@ int main() {
           double epsi = psi - atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px); //check if the indexing is correct
          
           Eigen::VectorXd current_state(6);
-          state << px, py, psi, v, cte, epsi;
-          auto solution = mpc.Solve(state, coeffs);
+          current_state << px, py, psi, v, cte, epsi;
+          auto solution = mpc.Solve(current_state, coeffs);
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
@@ -115,7 +119,7 @@ int main() {
           double throttle_value;
 
           steer_value = solution[6]/deg2rad(25);
-          throttle_value solution[7];
+          throttle_value = solution[7];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
