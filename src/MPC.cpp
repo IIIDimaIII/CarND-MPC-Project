@@ -45,6 +45,7 @@ class FG_eval {
     // the Solver function below.
     fg[0] = 0;
     // The part of the cost based on the reference state.
+    double ref_v = 10;
     for (int t = 0; t < N; t++) {
       fg[0] += CppAD::pow(vars[cte_start + t], 2);
       fg[0] += CppAD::pow(vars[epsi_start + t], 2);
