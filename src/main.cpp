@@ -85,13 +85,25 @@ int main() {
         string event = j[0].get<string>();
         if (event == "telemetry") {
           // j[1] is the data JSON object
-          vector<double> ptsx = j[1]["ptsx"];
-          vector<double> ptsy = j[1]["ptsy"];
-          double px = j[1]["x"];
-          double py = j[1]["y"];
+          vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
+          vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
+          double px = j[1]["x"]; 
+          double py = j[1]["y"]; 
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
           std::cout << ptsx[0] << std::endl;
+          //approximate target x and y values for the space in between waypoints 
+          auto coeffs = polyfit(ptsx, ptsy, 3);
+          double cte = polyeval(coeffs, px) - py;
+          // desired psi is a derivative of polynomial f(x) at x:
+          // for polynomial of order 3:
+          // f(x) = a*x^3 + b*x^2 + c*x + d, so
+          // f'(x) = 3*a*x^2 + 2*b*x + c          
+          double epsi = psi - atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px); //check if the indexing is correct
+         
+          Eigen::VectorXd current_state(6);
+          state << px, py, psi, v, cte, epsi;
+          auto solution = mpc.Solve(state, coeffs);
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
@@ -101,6 +113,9 @@ int main() {
           */
           double steer_value;
           double throttle_value;
+
+          steer_value = solution[6]/deg2rad(25);
+          throttle_value solution[7];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
