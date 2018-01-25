@@ -99,13 +99,19 @@ int main() {
           std::cout << ptsx[0] << std::endl;
           //approximate target x and y values for the space in between waypoints 
           auto coeffs = polyfit(eptsx, eptsy, 3);
+          std::cout << "coeffs" << std::endl;
+          std::cout << coeffs[0] << coeffs[1] << coeffs[2] << coeffs[3] << std::endl;
           double cte = polyeval(coeffs, px) - py;
+          std::cout << "cte" << std::endl;
+          std::cout << cte << std::endl;
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
           // f'(x) = 3*a*x^2 + 2*b*x + c          
           double epsi = psi - atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px); //check if the indexing is correct
-         
+          std::cout << "epsi" << std::endl;
+          std::cout << epsi << std::endl;
+
           Eigen::VectorXd current_state(6);
           current_state << px, py, psi, v, cte, epsi;
           auto solution = mpc.Solve(current_state, coeffs);
@@ -121,6 +127,10 @@ int main() {
 
           steer_value = solution[6]/deg2rad(25);
           throttle_value = solution[7];
+          std::cout << "steer_value" << std::endl;
+          std::cout << steer_value << std::endl;
+          std::cout << "throttle_value" << std::endl;
+          std::cout << throttle_value << std::endl;
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
