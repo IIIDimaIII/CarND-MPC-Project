@@ -107,8 +107,13 @@ int main() {
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
-          // f'(x) = 3*a*x^2 + 2*b*x + c          
-          double epsi = psi - atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px); //check if the indexing is correct
+          // f'(x) = 3*a*x^2 + 2*b*x + c
+          int x_direction = 0;
+          if (ptsx[0] < ptsx[1]){
+            int x_direction = 1;
+          }
+
+          double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
           std::cout << "epsi" << std::endl;
           std::cout << epsi << std::endl;
 
