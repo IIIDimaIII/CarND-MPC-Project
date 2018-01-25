@@ -11,9 +11,6 @@
 
 // for convenience
 using json = nlohmann::json;
-//test2test2test2
-//testetsetse
-//testtestetset3
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -94,6 +91,7 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          std::cout << ptsx << std::endl;
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
