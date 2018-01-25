@@ -110,7 +110,7 @@ int main() {
           // f'(x) = 3*a*x^2 + 2*b*x + c
           int x_direction = 0;
           if (ptsx[0] > ptsx[1]){
-            int x_direction = 1;
+            x_direction = 1;
           }
 
           double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
