@@ -109,7 +109,7 @@ int main() {
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
           // f'(x) = 3*a*x^2 + 2*b*x + c
           int x_direction = 0;
-          if (ptsx[0] < ptsx[1]){
+          if (ptsx[0] > ptsx[1]){
             int x_direction = 1;
           }
 
