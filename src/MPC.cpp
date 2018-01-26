@@ -224,7 +224,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
   
-  for (int i = 0; i < n_vars+1; i++) {
+  for (int i = 0; i < n_vars; i++) {
+    cout << "solution" << endl;
     cout << solution.x[i] << endl;
   
   }
