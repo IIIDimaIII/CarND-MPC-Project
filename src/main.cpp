@@ -99,7 +99,7 @@ int main() {
         if (event == "telemetry") {
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
-          if (m >= 2){
+          if (n >= 2){
             cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
           }
           
