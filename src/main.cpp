@@ -8,6 +8,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
+#include <ctime>
 
 // for convenience
 using json = nlohmann::json;
@@ -70,8 +71,8 @@ int main() {
 
   // MPC is initialized here!
   MPC mpc;  
-  auto prev_message_received_time = std::chrono::system_clock::now();
-  auto current_message_received_time = std::chrono::system_clock::now();
+  std::time_t  prev_message_received_time = std::chrono::system_clock::now();
+  std::time_t  current_message_received_time = std::chrono::system_clock::now();
   h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
