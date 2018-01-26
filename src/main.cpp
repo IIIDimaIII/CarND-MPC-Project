@@ -139,7 +139,7 @@ int main() {
 
           Eigen::VectorXd current_state(6);
           current_state << px, py, psi, v, cte, epsi;
-          auto solution = mpc.Solve(current_state, coeffs);
+          auto solution = mpc.Solve(current_state, coeffs, x_direction);
           
           double steer_value;
           double throttle_value;
