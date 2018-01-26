@@ -94,11 +94,12 @@ class FG_eval {
       AD<double> a0 = vars[a_start + t - 1];
       //!!!!!!!!!!!!!!!!!check if the coeff indexes are correct
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
-      if (x0 > x1){
-        AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));
+      AD<double> psides0;
+      if (vars[x_start + t] > vars[x_start + t - 1]){
+        psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));
       }
       else{
-        AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2) + M_PI) ;
+        psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2) + M_PI) ;
       }
       //!!!!!!!!!REVIEW THE CODE BELOW
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
