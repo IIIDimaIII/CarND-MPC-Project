@@ -92,15 +92,15 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
+          
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
           if (n >= 2){
             cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
             cout << "average time" << cum_time * 1. / (n - 1) << endl;  
-          }
-          
-            
+          }                 
           timestamp0 = std::chrono::high_resolution_clock::now();
+          
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
