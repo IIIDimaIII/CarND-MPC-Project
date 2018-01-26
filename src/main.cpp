@@ -79,7 +79,7 @@ int main() {
     // The 2 signifies a websocket event
     
     current_message_received_time = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::chrono::duration<double> elapsed_seconds = current_message_received_time-prev_message_received_time;
     std::cout <<  "time between messages: " << elapsed_seconds.count() << "s\n";
 
     string sdata = string(data).substr(0, length);
