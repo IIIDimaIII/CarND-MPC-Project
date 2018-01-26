@@ -100,7 +100,10 @@ int main() {
             cout << "average time" << cum_time * 1. / (n - 1) << endl;  
           }                 
           timestamp0 = std::chrono::high_resolution_clock::now();
-          
+
+          if (n >10) {
+            return 0;
+          }
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
