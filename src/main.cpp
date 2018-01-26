@@ -73,9 +73,7 @@ int main() {
   // MPC is initialized here!
   MPC mpc;
   
-  //std::chrono::steady_clock::time_point timestamp0 = std::chrono::system_clock::now();
-  //std::chrono::steady_clock::time_point timestamp1 = std::chrono::system_clock::now();
-  //struct timespec timestamp0, timestamp1;
+  //measuring how frequently the car receives telemetery data
   auto timestamp0 = std::chrono::high_resolution_clock::now();
   auto timestamp1 = std::chrono::high_resolution_clock::now();
   int n = 0; //counting telemetry messages
@@ -85,11 +83,7 @@ int main() {
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
-    // The 2 signifies a websocket event
-
-    
-
-
+    // The 2 signifies a websocket event 
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
@@ -192,7 +186,7 @@ int main() {
           //
           // NOTE: REMEMBER TO SET THIS TO 100 MILLISECONDS BEFORE
           // SUBMITTING.
-          //this_thread::sleep_for(chrono::milliseconds(100));
+          this_thread::sleep_for(chrono::milliseconds(100));
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
