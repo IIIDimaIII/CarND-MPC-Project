@@ -71,8 +71,8 @@ int main() {
   // MPC is initialized here!
   MPC mpc;
   
-  std::time_t timestamp0 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  std::time_t timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());    
+  std::chrono::steady_clock::time_point timestamp0 = std::chrono::system_clock::now();
+  std::chrono::steady_clock::time_point timestamp1 = std::chrono::system_clock::now();
   
   
   h.onMessage([&mpc, &timestamp0, &timestamp1](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
@@ -80,8 +80,8 @@ int main() {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    cout << "time" << timestamp1 - timestamp0 << endl;
+    timestamp1 = std::chrono::system_clock::now();
+    cout << "time" <<  std::chrono::duration_cast<std::chrono::seconds>(timestamp1 - timestamp0).count() << endl;
 
 
     string sdata = string(data).substr(0, length);
@@ -128,18 +128,12 @@ int main() {
           Eigen::VectorXd current_state(6);
           current_state << px, py, psi, v, cte, epsi;
           auto solution = mpc.Solve(current_state, coeffs);
-
-          /*
-          * TODO: Calculate steering angle and throttle using MPC.
-          *
-          * Both are in between [-1, 1].
-          *
-          */
+          
           double steer_value;
           double throttle_value;
 
-          steer_value = solution[6]/deg2rad(25);
-          throttle_value = solution[7];
+          steer_value = solution[0]/deg2rad(25);
+          throttle_value = solution[1];
           std::cout << "steer_value" << std::endl;
           std::cout << steer_value << std::endl;
           std::cout << "throttle_value" << std::endl;
