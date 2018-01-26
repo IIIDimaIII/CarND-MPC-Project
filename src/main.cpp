@@ -78,14 +78,15 @@ int main() {
   //struct timespec timestamp0, timestamp1;
   auto timestamp0 = std::chrono::high_resolution_clock::now();
   auto timestamp1 = std::chrono::high_resolution_clock::now();
+  int n = 0; //counting telemetry messages
+  double cum_time = 0; // cum sum of time elapsed
   
-  h.onMessage([&mpc, &timestamp0, &timestamp1](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    int n = 0; //counting telemetry messages
-    double cum_time = 0; // cum sum of time elapsed
+
     
 
 
