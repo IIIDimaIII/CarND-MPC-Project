@@ -75,9 +75,9 @@ int main() {
   
   //std::chrono::steady_clock::time_point timestamp0 = std::chrono::system_clock::now();
   //std::chrono::steady_clock::time_point timestamp1 = std::chrono::system_clock::now();
-  struct timespec timestamp0, timestamp1;
-  clock_gettime(CLOCK_REALTIME, &timestamp0);
-  clock_gettime(CLOCK_REALTIME, &timestamp1);  
+  //struct timespec timestamp0, timestamp1;
+  auto timestamp0 = std::chrono::high_resolution_clock::now();
+  auto timestamp1 = std::chrono::high_resolution_clock::now();
   
   h.onMessage([&mpc, &timestamp0, &timestamp1](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
@@ -85,10 +85,10 @@ int main() {
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     
-    clock_gettime(CLOCK_REALTIME, &timestamp1);
-    cout << "time" <<  (timestamp1.tv_sec - timestamp0.tv_sec) + (timestamp1.tv_sec - timestamp0.tv_sec) / 1000000000.0 << endl;
-    clock_gettime(CLOCK_REALTIME, &timestamp0);
-
+    timestamp1 = std::chrono::high_resolution_clock::now();
+    cout << "time" << << std::chrono::duration<double, std::milli>(timestamp0-timestamp1).count() << endl;    
+    timestamp0 = std::chrono::high_resolution_clock::now();
+    
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
