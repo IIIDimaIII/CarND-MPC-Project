@@ -223,6 +223,13 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // Check some of the solution values
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
+  
+  for (int i = 0; i < n_vars+1; i++) {
+    cout << solution.x[i] << endl;
+  
+  }
+ 
+
   // Cost
   auto cost = solution.obj_value;
   std::cout << "Cost " << cost << std::endl;
