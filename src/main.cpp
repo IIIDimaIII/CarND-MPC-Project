@@ -85,9 +85,7 @@ int main() {
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     
-    timestamp1 = std::chrono::high_resolution_clock::now();
-    cout << "time" << std::chrono::duration<double, std::milli>(timestamp0-timestamp1).count() << endl;    
-    timestamp0 = std::chrono::high_resolution_clock::now();
+
 
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
@@ -97,6 +95,10 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
+          
+          timestamp1 = std::chrono::high_resolution_clock::now();
+          cout << "time" << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() << endl;    
+          timestamp0 = std::chrono::high_resolution_clock::now();
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
