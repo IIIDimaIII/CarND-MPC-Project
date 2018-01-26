@@ -31,6 +31,7 @@ size_t cte_start = v_start + N;
 size_t epsi_start = cte_start + N;
 size_t delta_start = epsi_start + N;
 size_t a_start = delta_start + N - 1;
+size_t dir_start = a_start + N - 1;
 
 class FG_eval {
  public:
@@ -39,7 +40,7 @@ class FG_eval {
   FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
-  void operator()(ADvector& fg, const ADvector& vars, int& x_direction) {
+  void operator()(ADvector& fg, const ADvector& vars) {
     // TODO: implement MPC
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
     // NOTE: You'll probably go back and forth between this function and
@@ -69,7 +70,8 @@ class FG_eval {
     fg[1 + psi_start] = vars[psi_start];
     fg[1 + v_start] = vars[v_start];
     fg[1 + cte_start] = vars[cte_start];
-    fg[1 + epsi_start] = vars[epsi_start];
+    fg[1 + epsi_start] = vars[epsi_start];    
+    fg[1 + dir_start] = vars[dir_start];
 
     // The rest of the constraints - future steps
     for (int t = 1; t < N; t++) {
@@ -80,6 +82,7 @@ class FG_eval {
       AD<double> v1 = vars[v_start + t];
       AD<double> cte1 = vars[cte_start + t];
       AD<double> epsi1 = vars[epsi_start + t];
+      AD<double> dir = vars[dir_start + t - 1];
 
       // The state at time t.
       AD<double> x0 = vars[x_start + t - 1];
@@ -95,7 +98,7 @@ class FG_eval {
       //!!!!!!!!!!!!!!!!!check if the coeff indexes are correct
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
       AD<double> psides0;
-      psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2)) + x_direction * M_PI;      
+      psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2)) + dir * M_PI;      
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
@@ -130,6 +133,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   // +
   // (number of actuators) * (number of timesteps predicted - 1)
   size_t n_vars = N * 6 + (N - 1) * 2;
+  n_vars += (N - 1); //for x direction
+
   // the number of constraints: timesteps * number of independent variables
   size_t n_constraints = N * 6;
 
@@ -138,6 +143,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   Dvector vars(n_vars);
   for (int i = 0; i < n_vars; i++) {
     vars[i] = 0.0;
+    if (i >= N * 6 + (N - 1) * 2){
+      vars[i] = x_direction; // +1 if going down relative to x axis
+    }
+    
   }
   // Set the initial variable values
   vars[x_start] = x;
@@ -163,9 +172,13 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   }
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
-  for (int i = a_start; i < n_vars; i++) {
+  for (int i = a_start; i < dir_start; i++) {
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
+  }
+  for (int i = dir_start; i < n_vars; i++) {
+    vars_lowerbound[i] = 0;
+    vars_upperbound[i] = 1;
   }
 
 
@@ -184,6 +197,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[v_start] = v;
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
+  constraints_lowerbound[dir_start] = x_direction;
 
   constraints_upperbound[x_start] = x;
   constraints_upperbound[y_start] = y;
@@ -191,6 +205,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_upperbound[v_start] = v;
   constraints_upperbound[cte_start] = cte;
   constraints_upperbound[epsi_start] = epsi;
+  constraints_upperbound[dir_start] = x_direction;
 
   // object that computes objective and constraints
   FG_eval fg_eval(coeffs);
