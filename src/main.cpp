@@ -8,6 +8,8 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
+#include <ctime>
+#include <time.h>
 
 // for convenience
 using json = nlohmann::json;
@@ -71,18 +73,21 @@ int main() {
   // MPC is initialized here!
   MPC mpc;
   
-  std::chrono::steady_clock::time_point timestamp0 = std::chrono::system_clock::now();
-  std::chrono::steady_clock::time_point timestamp1 = std::chrono::system_clock::now();
-  
+  //std::chrono::steady_clock::time_point timestamp0 = std::chrono::system_clock::now();
+  //std::chrono::steady_clock::time_point timestamp1 = std::chrono::system_clock::now();
+  struct timespec timestamp0, timestamp1;
+  clock_gettime(CLOCK_MONOTONIC, &timestamp0);
+  clock_gettime(CLOCK_MONOTONIC, &timestamp1);  
   
   h.onMessage([&mpc, &timestamp0, &timestamp1](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    timestamp1 = std::chrono::system_clock::now();
-    cout << "time" <<  std::chrono::duration_cast<std::chrono::seconds>(timestamp1 - timestamp0).count() << endl;
-
+    
+    clock_gettime(CLOCK_MONOTONIC, &timestamp1);
+    cout << "time" <<  (timestamp1.tv_sec - timestamp0.tv_sec) + (timestamp1.tv_sec - timestamp0.tv_sec) / 1000000000.0 << endl;
+    clock_gettime(CLOCK_MONOTONIC, &timestamp0);
 
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
