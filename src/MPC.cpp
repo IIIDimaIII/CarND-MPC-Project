@@ -94,16 +94,19 @@ class FG_eval {
       AD<double> a0 = vars[a_start + t - 1];
       //!!!!!!!!!!!!!!!!!check if the coeff indexes are correct
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
-      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));
+      if (x0 > x1){
+        AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));
+      }
+      else{
+        AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2) + M_PI) ;
+      }
       //!!!!!!!!!REVIEW THE CODE BELOW
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
       fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
-      cout << "psi0" << cout;
-      cout << psi0 << cout;      
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);         
     }
   }
 };
