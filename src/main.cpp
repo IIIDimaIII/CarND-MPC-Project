@@ -69,13 +69,19 @@ int main() {
   uWS::Hub h;
 
   // MPC is initialized here!
-  MPC mpc;
-
+  MPC mpc;  
+  auto prev_message_received_time = std::chrono::system_clock::now();
+  auto current_message_received_time = std::chrono::system_clock::now();
   h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
+    
+    current_message_received_time = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::cout <<  "time between messages: " << elapsed_seconds.count() << "s\n";
+
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
@@ -183,6 +189,7 @@ int main() {
         std::string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
+      prev_message_received_time = current_message_received_time;
     }
   });
 
