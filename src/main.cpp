@@ -8,7 +8,6 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
-#include <ctime>
 
 // for convenience
 using json = nlohmann::json;
@@ -70,18 +69,20 @@ int main() {
   uWS::Hub h;
 
   // MPC is initialized here!
-  MPC mpc;  
-  std::time_t  prev_message_received_time = std::chrono::system_clock::now();
-  std::time_t  current_message_received_time = std::chrono::system_clock::now();
+  MPC mpc;
+  
+  std::time_t timestamp0 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::time_t timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());    
+  
+  
   h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    
-    current_message_received_time = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = current_message_received_time-prev_message_received_time;
-    std::cout <<  "time between messages: " << elapsed_seconds.count() << "s\n";
+    timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    cout << std::chrono::duration_cast<std::chrono::seconds>(timestamp1 - timestamp0).count() << endl;
+
 
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
@@ -190,7 +191,7 @@ int main() {
         std::string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
-      prev_message_received_time = current_message_received_time;
+      timestamp0 = timestamp1;
     }
   });
 
