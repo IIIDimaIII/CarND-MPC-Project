@@ -81,7 +81,7 @@ int main() {
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    cout << std::chrono::duration_cast<std::chrono::seconds>(timestamp1 - timestamp0).count() << endl;
+    cout << timestamp1 - timestamp0 << endl;
 
 
     string sdata = string(data).substr(0, length);
