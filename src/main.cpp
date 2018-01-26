@@ -81,7 +81,7 @@ int main() {
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    cout << timestamp1 - timestamp0 << endl;
+    cout << "time" << timestamp1 - timestamp0 << endl;
 
 
     string sdata = string(data).substr(0, length);
@@ -108,7 +108,7 @@ int main() {
           //approximate target x and y values for the space in between waypoints 
           auto coeffs = polyfit(eptsx, eptsy, 3);
           std::cout << "coeffs" << std::endl;
-          std::cout << coeffs[0] << coeffs[1] << coeffs[2] << coeffs[3] << std::endl;
+          std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c2: "<< coeffs[3] << std::endl;
           double cte = polyeval(coeffs, px) - py;
           std::cout << "cte" << std::endl;
           std::cout << cte << std::endl;
