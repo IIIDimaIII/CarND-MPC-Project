@@ -86,9 +86,9 @@ int main() {
     // The 2 signifies a websocket event
     
     timestamp1 = std::chrono::high_resolution_clock::now();
-    cout << "time" << << std::chrono::duration<double, std::milli>(timestamp0-timestamp1).count() << endl;    
+    cout << "time" << std::chrono::duration<double, std::milli>(timestamp0-timestamp1).count() << endl;    
     timestamp0 = std::chrono::high_resolution_clock::now();
-    
+
     string sdata = string(data).substr(0, length);
     cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
