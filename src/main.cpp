@@ -75,7 +75,7 @@ int main() {
   std::time_t timestamp1 = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());    
   
   
-  h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &timestamp0, &timestamp1](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
