@@ -23,8 +23,7 @@ double dt = 0.02;
 const double Lf = 2.67;
 
 //indexes for the vector used in the MPC solver
-size_t dir_start = 0;
-size_t x_start = 1;
+size_t x_start = 0;
 size_t y_start = x_start + N;
 size_t psi_start = y_start + N;
 size_t v_start = psi_start + N;
@@ -38,7 +37,8 @@ class FG_eval {
  public:
   // Fitted polynomial coefficients
   Eigen::VectorXd coeffs;
-  FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
+  int x_dir = 0; //test
+  FG_eval(Eigen::VectorXd coeffs, int d) { this->coeffs = coeffs; this->x_dir = d; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
@@ -46,8 +46,7 @@ class FG_eval {
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
     // NOTE: You'll probably go back and forth between this function and
     // the Solver function below.
-    fg[0] = 0;
-    fg[1] = 0; // x_direction
+    fg[0] = 0;    
     // The part of the cost based on the reference state.
     double ref_v = 10;
     for (int t = 0; t < N; t++) {
@@ -74,7 +73,8 @@ class FG_eval {
     fg[1 + cte_start] = vars[cte_start];
     fg[1 + epsi_start] = vars[epsi_start];        
     // The rest of the constraints - future steps
-    AD<double> dir = vars[0];    
+    //AD<double> dir = vars[0];
+    //int x_dir = vars[0];        
     for (int t = 1; t < N; t++) {
       // The state at time t+1 .      
       AD<double> x1 = vars[x_start + t];
@@ -96,7 +96,7 @@ class FG_eval {
       AD<double> delta0 = vars[delta_start + t - 1];
       AD<double> a0 = vars[a_start + t - 1];         
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
-      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2)) + dir * M_PI;     
+      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2)) + x_dir * M_PI;     
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
@@ -130,18 +130,17 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   // (number of independent variables) * (number of timesteps predicted)
   // +
   // (number of actuators) * (number of timesteps predicted - 1)
-  size_t n_vars = N * 6 + (N - 1) * 2 + 1; //+ 1 for x direction  
+  size_t n_vars = N * 6 + (N - 1) * 2;
 
   // the number of constraints: timesteps * number of independent variables
-  size_t n_constraints = N * 6 + 1; // +1 for x direction
+  size_t n_constraints = N * 6;
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
   Dvector vars(n_vars);  
   for (int i = 0; i < n_vars; i++) {
     vars[i] = 0.0;   
-  }
-  vars[dir_start] = x_direction;  
+  }  
   // Set the initial variable values  
   vars[x_start] = x;  
   vars[y_start] = y;  
@@ -170,8 +169,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
   }  
-  vars_lowerbound[dir_start] = 0;
-  vars_upperbound[dir_start] = 1;
   
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.
@@ -186,19 +183,18 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[psi_start] = psi;
   constraints_lowerbound[v_start] = v;
   constraints_lowerbound[cte_start] = cte;
-  constraints_lowerbound[epsi_start] = epsi;
-  constraints_lowerbound[dir_start] = x_direction;
+  constraints_lowerbound[epsi_start] = epsi;  
 
   constraints_upperbound[x_start] = x;
   constraints_upperbound[y_start] = y;
   constraints_upperbound[psi_start] = psi;
   constraints_upperbound[v_start] = v;
   constraints_upperbound[cte_start] = cte;
-  constraints_upperbound[epsi_start] = epsi;
-  constraints_upperbound[dir_start] = x_direction;
+  constraints_upperbound[epsi_start] = epsi;  
 
   // object that computes objective and constraints
-  FG_eval fg_eval(coeffs); 
+  //FG_eval fg_eval(coeffs); 
+  FG_eval fg_eval(coeffs, x_dir); 
 
   //
   // NOTE: You don't have to worry about these options
