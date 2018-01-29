@@ -48,22 +48,22 @@ class FG_eval {
     // the Solver function below.
     fg[0] = 0;    
     // The part of the cost based on the reference state.
-    double ref_v = 60;
+    double ref_v = 20;
     for (int t = 0; t < N; t++) {
       fg[0] += CppAD::pow(vars[cte_start + t], 2);
       fg[0] += CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
     // Minimize the use of actuators.
-    //for (int t = 0; t < N - 1; t++) {
-    //  fg[0] += CppAD::pow(vars[delta_start + t], 2);
-    //  fg[0] += CppAD::pow(vars[a_start + t], 2);
-    //}
+    for (int t = 0; t < N - 1; t++) {
+      fg[0] += CppAD::pow(vars[delta_start + t], 2);
+      fg[0] += CppAD::pow(vars[a_start + t], 2);
+    }
     // Minimize the value gap between sequential actuations.
-    //for (int t = 0; t < N - 2; t++) {
-    //  fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-    //  fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
-    //}
+    for (int t = 0; t < N - 2; t++) {
+      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+    }
     // Setup Constraints
     // current state: no need to calculate just grap the inputs
     fg[1 + x_start] = vars[x_start];
