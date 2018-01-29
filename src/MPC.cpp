@@ -32,7 +32,6 @@ size_t epsi_start = cte_start + N;
 size_t delta_start = epsi_start + N;
 size_t a_start = delta_start + N - 1;
 size_t dir_start = a_start + N - 1;
-std::cout << "checkpoint 1" << std::endl;
 
 class FG_eval {
  public:
@@ -53,8 +52,7 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[cte_start + t], 2);
       fg[0] += CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
-    }
-    cout << "checkpoint 2" << endl;
+    }    
     // Minimize the use of actuators.
     //for (int t = 0; t < N - 1; t++) {
     //  fg[0] += CppAD::pow(vars[delta_start + t], 2);
