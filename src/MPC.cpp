@@ -7,7 +7,7 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
-size_t N = 100;
+size_t N = 20;
 //double dt = 0.052;
 
 // This value assumes the model presented in the classroom is used.
@@ -52,15 +52,15 @@ class FG_eval {
     double ref_v = 30;
     
     //adjusting contribution of different cost components to the total
-    double k_cte = 1.0;
-    double k_epsi = 1.0;
+    double k_cte = 3000.0;
+    double k_epsi = 3000.0;
     double k_v = 1.0;
 
-    double k_d1 = 0;
-    double k_a1 = 0;
+    double k_d1 = 5.;
+    double k_a1 = 5.;
     
-    double k_d2 = 0;
-    double k_a2 = 0;
+    double k_d2 = 200.;
+    double k_a2 = 10.;
     
     for (int t = 0; t < N; t++) {
       fg[0] += k_cte * CppAD::pow(vars[cte_start + t], 2);
