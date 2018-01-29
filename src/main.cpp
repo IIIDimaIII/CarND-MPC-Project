@@ -130,6 +130,10 @@ int main() {
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
+          double px = j[1]["x"]; 
+          double py = j[1]["y"]; 
+          double psi = j[1]["psi"];
+          double v = j[1]["speed"];
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
           Eigen::VectorXd eptsy_vehicle(ptsy.size());
@@ -140,16 +144,13 @@ int main() {
             eptsy_vehicle[i](dx * sin(-psi) + dy * cos(-psi));
           } 
           
-          double px = j[1]["x"]; 
-          double py = j[1]["y"]; 
-          double psi = j[1]["psi"];
-          double v = j[1]["speed"];
+
           
           //approximate target x and y values for the space in between waypoints 
           auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
           std::cout << "coeffs" << std::endl;
           std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
-          double cte = polyeval(coeffs, px) - py;
+          double cte = polyeval(coeffs, 0) - 0;
           std::cout << "cte" << std::endl;
           std::cout << cte << std::endl;
           // desired psi is a derivative of polynomial f(x) at x:
