@@ -8,7 +8,7 @@ using CppAD::AD;
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
 size_t N = 10;
-double dt = 0.052;
+//double dt = 0.052;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -38,7 +38,8 @@ class FG_eval {
   // Fitted polynomial coefficients
   Eigen::VectorXd coeffs;
   int x_dir = 0; //test
-  FG_eval(Eigen::VectorXd coeffs, int d) { this->coeffs = coeffs; this->x_dir = d; }
+  double dt = 0;
+  FG_eval(Eigen::VectorXd coeffs, int d) { this->coeffs = coeffs; this->x_dir = d; this->dt = dt }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
@@ -126,7 +127,7 @@ MPC::MPC() {}
 MPC::~MPC() {}
 
 //vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
-vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction) {
+vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction, double& dt) {
   bool ok = true;
   //size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
@@ -206,7 +207,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
 
   // object that computes objective and constraints
   //FG_eval fg_eval(coeffs); 
-  FG_eval fg_eval(coeffs, x_direction); 
+  FG_eval fg_eval(coeffs, x_direction, dt); 
 
   //
   // NOTE: You don't have to worry about these options
