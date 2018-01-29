@@ -49,18 +49,18 @@ class FG_eval {
     // the Solver function below.
     fg[0] = 0;    
     // The part of the cost based on the reference state.
-    double ref_v = 70;
+    double ref_v = 5.;
     
     //adjusting contribution of different cost components to the total
-    double k_cte = 3000.0;
-    double k_epsi = 3000.0;
+    double k_cte = 1.0;
+    double k_epsi = 1.0;
     double k_v = 1.0;
 
-    double k_d1 = 5.;
-    double k_a1 = 5.;
+    double k_d1 = 1.;
+    double k_a1 = 1.;
     
-    double k_d2 = 200.;
-    double k_a2 = 10.;
+    double k_d2 = 1.;
+    double k_a2 = 1.;
     AD<double> cte_error = 0;
     AD<double> psi_error = 0;
     AD<double> vel_error = 0;
