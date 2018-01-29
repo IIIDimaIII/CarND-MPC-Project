@@ -198,8 +198,8 @@ int main() {
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
-          next_x_vals << ptsx[0],ptsx[1],ptsx[2],ptsx[3],ptsx[4],ptsx[5];
-          next_y_vals << ptsy[0],ptsy[1],ptsy[2],ptsy[3],ptsy[4],ptsy[5];
+          next_x_vals = ptsx;
+          next_y_vals = ptsy;
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
