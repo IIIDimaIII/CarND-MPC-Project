@@ -29,9 +29,10 @@ size_t psi_start = y_start + N;
 size_t v_start = psi_start + N;
 size_t cte_start = v_start + N;
 size_t epsi_start = cte_start + N;
-size_t delta_start = epsi_start + N;
+size_t dir_start = epsi_start + N - 1;
+size_t delta_start = dir_start + 1;
 size_t a_start = delta_start + N - 1;
-size_t dir_start = a_start + N - 1;
+
 
 class FG_eval {
  public:
@@ -194,7 +195,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[v_start] = v;
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
-  constraints_lowerbound[epsi_start + N] = x_direction;
+  constraints_lowerbound[dir_start] = x_direction;
+  //constraints_lowerbound[epsi_start + N] = x_direction;
 
 
   constraints_upperbound[x_start] = x;
@@ -203,7 +205,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_upperbound[v_start] = v;
   constraints_upperbound[cte_start] = cte;
   constraints_upperbound[epsi_start] = epsi;
-  constraints_upperbound[epsi_start + N] = x_direction;
+  //constraints_upperbound[epsi_start + N] = x_direction;
+  constraints_upperbound[dir_start] = x_direction;
 
   // object that computes objective and constraints
   FG_eval fg_eval(coeffs); 
