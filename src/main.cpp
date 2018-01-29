@@ -99,7 +99,7 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          double dt = 0.1;
+          double dt = 0.2;
           /*MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
