@@ -75,7 +75,7 @@ class FG_eval {
     fg[1 + epsi_start] = vars[epsi_start];        
     // The rest of the constraints - future steps
     //AD<double> dir = vars[0];
-    int dir = vars[0];
+    AD<double> = vars[0];
     for (int t = 1; t < N; t++) {
       // The state at time t+1 .      
       AD<double> x1 = vars[x_start + t];
