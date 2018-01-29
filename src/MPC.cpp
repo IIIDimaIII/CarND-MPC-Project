@@ -86,7 +86,7 @@ class FG_eval {
       delta_der += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       a_der += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
-    f[0] = cte_error +  psi_error + vel_error + delta_cum + a_cum + delta_der + a_der;
+    fg[0] = cte_error +  psi_error + vel_error + delta_cum + a_cum + delta_der + a_der;
     cout << "cte_error " << cte_error << endl; 
     cout << "psi_error " << psi_error << endl;
     cout << "vel_error " << vel_error << endl;
