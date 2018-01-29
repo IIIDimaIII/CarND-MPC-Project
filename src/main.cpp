@@ -99,7 +99,7 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          
+          double dt = 0.1;
           /*MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
@@ -140,8 +140,8 @@ int main() {
           for (int i = 0; i < ptsx.size(); i++){
             double dx = ptsx[i] - px;
             double dy = ptsy[i] - py;
-            eptsx_vehicle[i](dx * cos(-psi) - dy * sin(-psi));
-            eptsy_vehicle[i](dx * sin(-psi) + dy * cos(-psi));
+            eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
+            eptsy_vehicle[i] = (dx * sin(-psi) + dy * cos(-psi));
           } 
           
 
@@ -157,17 +157,20 @@ int main() {
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
           // f'(x) = 3*a*x^2 + 2*b*x + c
+          
           int x_direction = 0;
           if (ptsx[0] > ptsx[1]){
             x_direction = 1;
           }
 
-          double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
+          //double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
+          double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px)); 
           std::cout << "epsi" << std::endl;
           std::cout << epsi << std::endl;
 
           Eigen::VectorXd current_state(6);
-          current_state << px, py, psi, v, cte, epsi;
+          //current_state << px, py, psi, v, cte, epsi;
+          current_state << 0, 0, 0, v, cte, epsi;
           auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
           
           double steer_value;
