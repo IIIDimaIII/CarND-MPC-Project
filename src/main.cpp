@@ -101,9 +101,9 @@ int main() {
           }                 
           timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >1000) {
-            return 0;
-          }
+          //if (n >1000) {
+          //  return 0;
+          //}
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
