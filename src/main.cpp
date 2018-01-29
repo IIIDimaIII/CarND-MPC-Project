@@ -100,9 +100,11 @@ int main() {
         string event = j[0].get<string>();
         if (event == "telemetry") {
           double dt = 0.2;
+          n +=1;
+          
           /*MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
-          n +=1;
+          
           for (int i = dts_curr.size()-2; i>=0; i-- ){
             dts_curr[i] = dts_prev[i+1];
           }
@@ -123,9 +125,9 @@ int main() {
           cout << "dt " << dt << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();*/
 
-          //if (n >1000) {
-          //  return 0;
-          //}
+          if (n >5) {
+            return 0;
+          }
 
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
