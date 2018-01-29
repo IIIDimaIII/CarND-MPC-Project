@@ -23,13 +23,13 @@ double dt = 0.02;
 const double Lf = 2.67;
 
 //indexes for the vector used in the MPC solver
-size_t x_start = 0;
+size_t dir_start = 0;
+size_t x_start = 1;
 size_t y_start = x_start + N;
 size_t psi_start = y_start + N;
 size_t v_start = psi_start + N;
 size_t cte_start = v_start + N;
 size_t epsi_start = cte_start + N;
-size_t dir_start = epsi_start + N - 1;
 size_t delta_start = dir_start + 1;
 size_t a_start = delta_start + N - 1;
 
@@ -47,6 +47,7 @@ class FG_eval {
     // NOTE: You'll probably go back and forth between this function and
     // the Solver function below.
     fg[0] = 0;
+    fg[1] = 0; // x_direction
     // The part of the cost based on the reference state.
     double ref_v = 10;
     for (int t = 0; t < N; t++) {
@@ -71,18 +72,18 @@ class FG_eval {
     fg[1 + psi_start] = vars[psi_start];
     fg[1 + v_start] = vars[v_start];
     fg[1 + cte_start] = vars[cte_start];
-    fg[1 + epsi_start] = vars[epsi_start];    
-    fg[1 + dir_start] = vars[dir_start];
+    fg[1 + epsi_start] = vars[epsi_start];        
     // The rest of the constraints - future steps
+    //AD<double> dir = vars[0];
+    int dir = vars[0];
     for (int t = 1; t < N; t++) {
-      // The state at time t+1 .
+      // The state at time t+1 .      
       AD<double> x1 = vars[x_start + t];
       AD<double> y1 = vars[y_start + t];
       AD<double> psi1 = vars[psi_start + t];
       AD<double> v1 = vars[v_start + t];
       AD<double> cte1 = vars[cte_start + t];
-      AD<double> epsi1 = vars[epsi_start + t];
-      AD<double> dir = vars[dir_start];     
+      AD<double> epsi1 = vars[epsi_start + t];      
 
       // The state at time t.
       AD<double> x0 = vars[x_start + t - 1];
@@ -102,9 +103,8 @@ class FG_eval {
       fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
       fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);              
-    }
-    
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);            
+    }    
   }
 };
 
