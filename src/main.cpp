@@ -198,8 +198,13 @@ int main() {
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
-          next_x_vals = ptsx;
-          next_y_vals = ptsy;
+          //convert to vehicle's coordinates
+          for( int i = 0; i < ptsx.size(); i++) {
+            double dx = ptsx[i] - px;
+            double dy = ptsy[i] - py;
+            next_x_vals.push_back(dx * cos(-psi) - dy * sin(-psi));
+            next_y_vals.push_back(dx * sin(-psi) + dy * cos(-psi));
+          }          
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
