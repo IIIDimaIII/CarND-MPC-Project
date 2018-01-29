@@ -140,7 +140,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   size_t n_vars = N * 6 + (N - 1) * 2 + 1; //+ 1 for x direction  
 
   // the number of constraints: timesteps * number of independent variables
-  size_t n_constraints = N * 6;
+  size_t n_constraints = N * 6 + 1; // +1 for x direction
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
