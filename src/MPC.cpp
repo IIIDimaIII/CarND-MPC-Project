@@ -165,7 +165,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   }  
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
-  for (int i = a_start; i < dir_start; i++) {
+  for (int i = a_start; i < n_vars; i++) {
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
   }  
@@ -194,7 +194,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
 
   // object that computes objective and constraints
   //FG_eval fg_eval(coeffs); 
-  FG_eval fg_eval(coeffs, x_dir); 
+  FG_eval fg_eval(coeffs, x_direction); 
 
   //
   // NOTE: You don't have to worry about these options
