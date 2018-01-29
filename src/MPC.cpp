@@ -32,6 +32,7 @@ size_t epsi_start = cte_start + N;
 size_t delta_start = epsi_start + N;
 size_t a_start = delta_start + N - 1;
 size_t dir_start = a_start + N - 1;
+std::cout << "checkpoint 1" << std::endl;
 
 class FG_eval {
  public:
@@ -53,6 +54,7 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
+    std::cout << "checkpoint 2" << std::endl;
     // Minimize the use of actuators.
     //for (int t = 0; t < N - 1; t++) {
     //  fg[0] += CppAD::pow(vars[delta_start + t], 2);
@@ -72,7 +74,7 @@ class FG_eval {
     fg[1 + cte_start] = vars[cte_start];
     fg[1 + epsi_start] = vars[epsi_start];    
     fg[1 + dir_start] = vars[dir_start];
-
+    std::cout << "checkpoint 3" << std::endl;
     // The rest of the constraints - future steps
     for (int t = 1; t < N; t++) {
       // The state at time t+1 .
@@ -82,7 +84,8 @@ class FG_eval {
       AD<double> v1 = vars[v_start + t];
       AD<double> cte1 = vars[cte_start + t];
       AD<double> epsi1 = vars[epsi_start + t];
-      AD<double> dir = vars[dir_start];      
+      AD<double> dir = vars[dir_start]; 
+      std::cout << "checkpoint 4.0."<< t << std::endl;     
 
       // The state at time t.
       AD<double> x0 = vars[x_start + t - 1];
@@ -91,19 +94,23 @@ class FG_eval {
       AD<double> v0 = vars[v_start + t - 1];
       AD<double> cte0 = vars[cte_start + t - 1];
       AD<double> epsi0 = vars[epsi_start + t - 1];
+      std::cout << "checkpoint 4.1."<< t << std::endl;     
 
       // Only consider the actuation at time t.
       AD<double> delta0 = vars[delta_start + t - 1];
       AD<double> a0 = vars[a_start + t - 1];
+      std::cout << "checkpoint 4.2."<< t << std::endl;     
       
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
       AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2)) + dir * M_PI;
+      std::cout << "checkpoint 4.3."<< t << std::endl;     
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
       fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
       fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);         
+      std::cout << "checkpoint 4.4."<< t << std::endl;     
     }
     
   }
@@ -140,9 +147,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
   Dvector vars(n_vars);
+  std::cout << "checkpoint 5" << std::endl; 
   for (int i = 0; i < n_vars; i++) {
     vars[i] = 0.0;   
   }
+  std::cout << "checkpoint 6" << std::endl; 
   vars[-1] = x_direction;
   // Set the initial variable values
   vars[x_start] = x;
@@ -151,6 +160,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   vars[v_start] = v;
   vars[cte_start] = cte;
   vars[epsi_start] = epsi;
+  std::cout << "checkpoint 7" << std::endl; 
 
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
@@ -159,6 +169,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     vars_lowerbound[i] = -1.0e19;
     vars_upperbound[i] = 1.0e19;
   }
+  std::cout << "checkpoint 8" << std::endl; 
   // The upper and lower limits of delta are set to -25 and 25
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
@@ -166,15 +177,17 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     vars_lowerbound[i] = -0.436332;
     vars_upperbound[i] = 0.436332;
   }
+  std::cout << "checkpoint 9" << std::endl; 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < dir_start; i++) {
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
   }
-  
+  std::cout << "checkpoint 10" << std::endl; 
   vars_lowerbound[-1] = 0;
   vars_upperbound[-1] = 1;
+  std::cout << "checkpoint 11" << std::endl; 
   //for (int i = dir_start; i < n_vars; i++) {
   //  vars_lowerbound[i] = 0;
   //  vars_upperbound[i] = 1;
@@ -190,6 +203,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     constraints_lowerbound[i] = 0;
     constraints_upperbound[i] = 0;
   }
+  std::cout << "checkpoint 12" << std::endl; 
   constraints_lowerbound[x_start] = x;
   constraints_lowerbound[y_start] = y;
   constraints_lowerbound[psi_start] = psi;
@@ -197,6 +211,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
   constraints_lowerbound[-1] = x_direction;
+  std::cout << "checkpoint 13" << std::endl; 
 
   constraints_upperbound[x_start] = x;
   constraints_upperbound[y_start] = y;
@@ -205,9 +220,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_upperbound[cte_start] = cte;
   constraints_upperbound[epsi_start] = epsi;
   constraints_upperbound[-1] = x_direction;
+  std::cout << "checkpoint 14" << std::endl; 
 
   // object that computes objective and constraints
   FG_eval fg_eval(coeffs);
+  std::cout << "checkpoint 15" << std::endl; 
 
   //
   // NOTE: You don't have to worry about these options
