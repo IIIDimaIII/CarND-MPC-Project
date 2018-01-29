@@ -53,14 +53,14 @@ class FG_eval {
     
     //adjusting contribution of different cost components to the total
     double k_cte = 1.0;
-    double k_epsi = 1.0;
-    double k_v = 1.0;
+    double k_epsi = 0;
+    double k_v = 0;
 
-    double k_d1 = 1.;
-    double k_a1 = 1.;
+    double k_d1 = 0;
+    double k_a1 = 0;
     
-    double k_d2 = 1.;
-    double k_a2 = 1.;
+    double k_d2 = 0;
+    double k_a2 = 0;
     AD<double> cte_error = 0;
     AD<double> psi_error = 0;
     AD<double> vel_error = 0;
@@ -196,8 +196,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; i++) {
-    vars_lowerbound[i] = -1.0;
-    vars_upperbound[i] = 1.0;
+    vars_lowerbound[i] = 0.05;
+    vars_upperbound[i] = 0.05;
+    //vars_lowerbound[i] = -1.0;
+    //vars_upperbound[i] = 1.0;
   }  
   
   // Lower and upper limits for the constraints
