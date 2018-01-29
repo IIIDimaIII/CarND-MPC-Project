@@ -150,7 +150,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     vars[i] = 0.0;   
   }
   cout << "checkpoint 6" << endl; 
-  vars[-1] = x_direction;
+  cout << "dir_start "<< dir_start << endl; 
+  vars[dir_start] = x_direction;
   cout << "checkpoint" << endl; 
   // Set the initial variable values  
   vars[x_start] = x;
