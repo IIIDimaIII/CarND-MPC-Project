@@ -173,8 +173,8 @@ int main() {
           current_state << 0, 0, 0, v, cte, epsi;
           auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
           
-          double steer_value;
-          double throttle_value;
+          double steer_value = 0;
+          double throttle_value = 0;
 
           steer_value = solution[0]/deg2rad(25);
           throttle_value = solution[1];
@@ -195,6 +195,10 @@ int main() {
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
+          for(int i = 2; i < solution.size(); i+=2){
+            mpc_x_vals.push_back(solution[i]);
+            mpc_y_vals.push_back(solution[i+1]);
+          }
 
           msgJson["mpc_x"] = mpc_x_vals;
           msgJson["mpc_y"] = mpc_y_vals;
