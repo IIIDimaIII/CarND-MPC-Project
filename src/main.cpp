@@ -105,7 +105,7 @@ int main() {
           for (int i = dts_curr.size()-2; i>=0; i-- ){
             dts_curr[i] = dts_prev[i+1];
           }
-          dts_curr[dts_curr.size() - 1] = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
+          dts_curr[dts_curr.size() - 1] = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           double dts_sum = 0;
           for (int i = 0; i < dts_curr.size();i++){
             dts_sum += dts_curr[i];
