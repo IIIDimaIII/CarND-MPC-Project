@@ -163,8 +163,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   for (int i = 0; i < delta_start; i++) {
     vars_lowerbound[i] = -1.0e19;
     vars_upperbound[i] = 1.0e19;
-  }
-  cout << "checkpoint 8" << endl; 
+  }  
   // The upper and lower limits of delta are set to -25 and 25
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
@@ -177,18 +176,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   for (int i = a_start; i < dir_start; i++) {
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] = 1.0;
-  }
-  cout << "checkpoint 10" << endl; 
+  }  
   vars_lowerbound[dir_start] = 0;
   vars_upperbound[dir_start] = 1;
-  cout << "checkpoint 11" << endl; 
-  //for (int i = dir_start; i < n_vars; i++) {
-  //  vars_lowerbound[i] = 0;
-  //  vars_upperbound[i] = 1;
-  //}
-
-
-
+  
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.
   Dvector constraints_lowerbound(n_constraints);
@@ -204,7 +195,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[v_start] = v;
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
-  constraints_lowerbound[-1] = x_direction;
+  constraints_lowerbound[dir_start] = x_direction;
   cout << "checkpoint 13" << endl; 
 
   constraints_upperbound[x_start] = x;
@@ -213,7 +204,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_upperbound[v_start] = v;
   constraints_upperbound[cte_start] = cte;
   constraints_upperbound[epsi_start] = epsi;
-  constraints_upperbound[-1] = x_direction;
+  constraints_upperbound[dir_start] = x_direction;
   cout << "checkpoint 14" << endl; 
 
   // object that computes objective and constraints
