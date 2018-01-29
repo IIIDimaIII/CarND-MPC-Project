@@ -101,7 +101,7 @@ int main() {
           }                 
           timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >10) {
+          if (n >1000) {
             return 0;
           }
           // j[1] is the data JSON object
