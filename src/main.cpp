@@ -78,8 +78,15 @@ int main() {
   auto timestamp1 = std::chrono::high_resolution_clock::now();
   int n = 0; //counting telemetry messages
   double cum_time = 0; // cum sum of time elapsed
+  int k = 10;
+  vector<double> dts_prev(k);
+  vector<double> dts_curr(k);
+  for(int i = 0; i < k; i++){
+    dts_prev[i] = 0;
+    dts_curr[i] = 0;
+  }
   
-  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &dts_prev, &dts_curr](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -95,10 +102,27 @@ int main() {
           
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
-          if (n >= 2){
-            cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
-            cout << "average time" << cum_time * 1. / (n - 1) << endl;  
-          }                 
+          for (int i = dts_curr.size-2; i>=0; i-- ){
+            dts_curr[i] = dts_prev[i+1];
+          }
+          dts_curr[dts_curr.size - 1] = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
+          double dts_sum = 0;
+          for (int i = 0; i < dts_curr.size;i++){
+            dts_sum += dts_curr[i];
+          }
+
+          double dt = 0.001;
+          if (n < dts_curr.size){
+            dt = dts_sum / (n * 1.);
+          }
+          else {
+            dt = dts_sum / (dts_curr.size * 1.);
+          }
+          dts_prev = dts_curr;
+          //if (n >= 2){
+          //  cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
+          //  cout << "average time" << cum_time * 1. / (n - 1) << endl;  
+          //}                 
           timestamp0 = std::chrono::high_resolution_clock::now();
 
           //if (n >1000) {
