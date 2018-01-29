@@ -151,13 +151,20 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   }
   cout << "checkpoint 6" << endl; 
   vars[-1] = x_direction;
-  // Set the initial variable values
+  cout << "checkpoint" << endl; 
+  // Set the initial variable values  
   vars[x_start] = x;
+  cout << "checkpoint" << endl; 
   vars[y_start] = y;
+  cout << "checkpoint" << endl; 
   vars[psi_start] = psi;
+  cout << "checkpoint" << endl; 
   vars[v_start] = v;
+  cout << "checkpoint" << endl; 
   vars[cte_start] = cte;
+  cout << "checkpoint" << endl; 
   vars[epsi_start] = epsi;
+  cout << "checkpoint" << endl; 
   cout << "checkpoint 7" << endl; 
 
   Dvector vars_lowerbound(n_vars);
