@@ -196,6 +196,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
   cout << "checkpoint 13.0" << endl; 
+  cout << "n_constraints " << n_constraints << endl; 
+  cout << "epsi_start " << epsi_start << endl; 
+  cout << "dir_start " << dir_start << endl;
+
   constraints_lowerbound[dir_start] = x_direction;
   cout << "checkpoint 13.1" << endl; 
 
