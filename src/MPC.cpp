@@ -39,7 +39,7 @@ class FG_eval {
   Eigen::VectorXd coeffs;
   int x_dir = 0; //test
   double dt = 0;
-  FG_eval(Eigen::VectorXd coeffs, int d) { this->coeffs = coeffs; this->x_dir = d; this->dt = dt }
+  FG_eval(Eigen::VectorXd coeffs, int d, double t) { this->coeffs = coeffs; this->x_dir = d; this->dt = t }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
