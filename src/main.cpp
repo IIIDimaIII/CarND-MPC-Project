@@ -120,7 +120,7 @@ int main() {
           //approximate target x and y values for the space in between waypoints 
           auto coeffs = polyfit(eptsx, eptsy, 3);
           std::cout << "coeffs" << std::endl;
-          std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c2: "<< coeffs[3] << std::endl;
+          std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
           double cte = polyeval(coeffs, px) - py;
           std::cout << "cte" << std::endl;
           std::cout << cte << std::endl;

@@ -8,7 +8,7 @@ using CppAD::AD;
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
 size_t N = 10;
-double dt = 0.1;
+double dt = 0.75;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -49,21 +49,33 @@ class FG_eval {
     fg[0] = 0;    
     // The part of the cost based on the reference state.
     double ref_v = 30;
+    
+    //adjusting contribution of different cost components to the total
+    double k_cte = 1.0;
+    double k_epsi = 0;
+    double k_v = 0;
+
+    double k_d1 = 0;
+    double k_a1 = 0;
+    
+    double k_d2 = 0;
+    double k_a2 = 0;
+    
     for (int t = 0; t < N; t++) {
-      fg[0] += CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += CppAD::pow(vars[epsi_start + t], 2);
-      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
+      fg[0] += k_cte * CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
     // Minimize the use of actuators.
-    //for (int t = 0; t < N - 1; t++) {
-    //  fg[0] += CppAD::pow(vars[delta_start + t], 2);
-    //  fg[0] += CppAD::pow(vars[a_start + t], 2);
-    //}
+    for (int t = 0; t < N - 1; t++) {
+      fg[0] += k_d1 * CppAD::pow(vars[delta_start + t], 2);
+      fg[0] += k_a1 * CppAD::pow(vars[a_start + t], 2);
+    }
     // Minimize the value gap between sequential actuations.
-    //for (int t = 0; t < N - 2; t++) {
-    //  fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-    //  fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
-    //}
+    for (int t = 0; t < N - 2; t++) {
+      fg[0] += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+    }
     // Setup Constraints
     // current state: no need to calculate just grap the inputs
     fg[1 + x_start] = vars[x_start];
@@ -116,7 +128,7 @@ MPC::~MPC() {}
 //vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction) {
   bool ok = true;
-  size_t i;
+  //size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
   
   double x = state[0];
