@@ -187,21 +187,15 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   for (int i = 0; i < n_constraints; i++) {
     constraints_lowerbound[i] = 0;
     constraints_upperbound[i] = 0;
-  }
-  cout << "checkpoint 12" << endl; 
+  } 
   constraints_lowerbound[x_start] = x;
   constraints_lowerbound[y_start] = y;
   constraints_lowerbound[psi_start] = psi;
   constraints_lowerbound[v_start] = v;
   constraints_lowerbound[cte_start] = cte;
   constraints_lowerbound[epsi_start] = epsi;
-  cout << "checkpoint 13.0" << endl; 
-  cout << "n_constraints " << n_constraints << endl; 
-  cout << "epsi_start " << epsi_start << endl; 
-  cout << "dir_start " << dir_start << endl;
-
   constraints_lowerbound[epsi_start + N] = x_direction;
-  cout << "checkpoint 13.1" << endl; 
+
 
   constraints_upperbound[x_start] = x;
   constraints_upperbound[y_start] = y;
@@ -210,11 +204,9 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   constraints_upperbound[cte_start] = cte;
   constraints_upperbound[epsi_start] = epsi;
   constraints_upperbound[epsi_start + N] = x_direction;
-  cout << "checkpoint 14" << endl; 
 
   // object that computes objective and constraints
-  FG_eval fg_eval(coeffs);
-  cout << "checkpoint 15" << endl; 
+  FG_eval fg_eval(coeffs); 
 
   //
   // NOTE: You don't have to worry about these options
@@ -236,11 +228,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
 
   // place to return solution
   CppAD::ipopt::solve_result<Dvector> solution;
-
+  cout << "check 1" << endl;
   // solve the problem
   CppAD::ipopt::solve<Dvector, FG_eval>(
       options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
       constraints_upperbound, fg_eval, solution);
+  cout << "check 2" << endl;
 
   // Check some of the solution values
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
