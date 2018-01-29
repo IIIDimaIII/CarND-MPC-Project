@@ -100,6 +100,7 @@ int main() {
         string event = j[0].get<string>();
         if (event == "telemetry") {
           
+          /*MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           n +=1;
           for (int i = dts_curr.size()-2; i>=0; i-- ){
@@ -118,32 +119,34 @@ int main() {
           else {
             dt = dts_sum / (dts_curr.size() * 1.);
           }
-          dts_prev = dts_curr;
-          //if (n >= 2){
-          //  cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
-          //  cout << "average time" << cum_time * 1. / (n - 1) << endl;  
-          //}  
+          dts_prev = dts_curr;           
           cout << "dt " << dt << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();
+          timestamp0 = std::chrono::high_resolution_clock::now();*/
 
           //if (n >1000) {
           //  return 0;
           //}
+
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
-          Eigen::VectorXd eptsx(6);
-          Eigen::VectorXd eptsy(6);
-          //!!!!!!!!!!!!!!!temp shortcut - find the proper way
-          eptsx << ptsx[0],ptsx[1],ptsx[2],ptsx[3],ptsx[4],ptsx[5];
-          eptsy << ptsy[0],ptsy[1],ptsy[2],ptsy[3],ptsy[4],ptsy[5];
+          //convert to vehicle coordinates
+          Eigen::VectorXd eptsx_vehicle(ptsx.size());
+          Eigen::VectorXd eptsy_vehicle(ptsy.size());
+          for (int i = 0; i < ptsx.size(); i++){
+            double dx = ptsx[i] - px;
+            double dy = ptsy[i] - py;
+            eptsx_vehicle[i](dx * cos(-psi) - dy * sin(-psi));
+            eptsy_vehicle[i](dx * sin(-psi) + dy * cos(-psi));
+          } 
+          
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
-          std::cout << ptsx[0] << std::endl;
+          
           //approximate target x and y values for the space in between waypoints 
-          auto coeffs = polyfit(eptsx, eptsy, 3);
+          auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
           std::cout << "coeffs" << std::endl;
           std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
           double cte = polyeval(coeffs, px) - py;
