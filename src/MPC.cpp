@@ -61,15 +61,13 @@ class FG_eval {
     
     double k_d2 = 200.;
     double k_a2 = 10.;
-    double cte_error = 0;
-    double psi_error = 0;
-    double vel_error = 0;
-    double delta_cum = 0;
-    double a_cum = 0;
-    double delta_der = 0;
-    double a_der = 0;
-
-
+    AD<double> cte_error = 0;
+    AD<double> psi_error = 0;
+    AD<double> vel_error = 0;
+    AD<double> delta_cum = 0;
+    AD<double> a_cum = 0;
+    AD<double> delta_der = 0;
+    AD<double> a_der = 0;
     
     for (int t = 0; t < N; t++) {
       cte_error += k_cte * CppAD::pow(vars[cte_start + t], 2);
