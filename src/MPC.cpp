@@ -144,29 +144,18 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
-  Dvector vars(n_vars);
-  cout << "checkpoint 5" << endl; 
+  Dvector vars(n_vars);  
   for (int i = 0; i < n_vars; i++) {
     vars[i] = 0.0;   
   }
-  cout << "checkpoint 6" << endl; 
-  cout << "dir_start "<< dir_start << endl; 
-  vars[dir_start] = x_direction;
-  cout << "checkpoint" << endl; 
+  vars[dir_start] = x_direction;  
   // Set the initial variable values  
-  vars[x_start] = x;
-  cout << "checkpoint" << endl; 
-  vars[y_start] = y;
-  cout << "checkpoint" << endl; 
-  vars[psi_start] = psi;
-  cout << "checkpoint" << endl; 
-  vars[v_start] = v;
-  cout << "checkpoint" << endl; 
-  vars[cte_start] = cte;
-  cout << "checkpoint" << endl; 
-  vars[epsi_start] = epsi;
-  cout << "checkpoint" << endl; 
-  cout << "checkpoint 7" << endl; 
+  vars[x_start] = x;  
+  vars[y_start] = y;  
+  vars[psi_start] = psi;  
+  vars[v_start] = v;  
+  vars[cte_start] = cte;  
+  vars[epsi_start] = epsi;   
 
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
@@ -182,8 +171,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
   for (int i = delta_start; i < a_start; i++) {
     vars_lowerbound[i] = -0.436332;
     vars_upperbound[i] = 0.436332;
-  }
-  cout << "checkpoint 9" << endl; 
+  }  
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < dir_start; i++) {
@@ -191,8 +179,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
     vars_upperbound[i] = 1.0;
   }
   cout << "checkpoint 10" << endl; 
-  vars_lowerbound[-1] = 0;
-  vars_upperbound[-1] = 1;
+  vars_lowerbound[dir_start] = 0;
+  vars_upperbound[dir_start] = 1;
   cout << "checkpoint 11" << endl; 
   //for (int i = dir_start; i < n_vars; i++) {
   //  vars_lowerbound[i] = 0;
