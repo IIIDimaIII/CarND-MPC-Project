@@ -122,7 +122,8 @@ int main() {
           //if (n >= 2){
           //  cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count();
           //  cout << "average time" << cum_time * 1. / (n - 1) << endl;  
-          //}                 
+          //}  
+          cout << "dt " << dt << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();
 
           //if (n >1000) {

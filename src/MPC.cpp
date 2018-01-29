@@ -38,7 +38,7 @@ class FG_eval {
   // Fitted polynomial coefficients
   Eigen::VectorXd coeffs;
   int x_dir = 0; //test
-  double dt = 0;
+  double dt = 0.03;
   FG_eval(Eigen::VectorXd coeffs, int d, double t) { this->coeffs = coeffs; this->x_dir = d; this->dt = t; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
