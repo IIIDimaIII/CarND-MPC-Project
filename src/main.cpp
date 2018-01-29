@@ -72,7 +72,7 @@ int main() {
 
   // MPC is initialized here!
   MPC mpc;
-  std::cout << "mpc initialized" << std::endl;
+  cout << "test" << endl;
   //measuring how frequently the car receives telemetery data
   auto timestamp0 = std::chrono::high_resolution_clock::now();
   auto timestamp1 = std::chrono::high_resolution_clock::now();
