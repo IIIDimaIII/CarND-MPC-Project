@@ -61,22 +61,41 @@ class FG_eval {
     
     double k_d2 = 200.;
     double k_a2 = 10.;
+    double cte_error = 0;
+    double psi_error = 0;
+    double vel_error = 0;
+    double delta_cum = 0;
+    double a_cum = 0;
+    double delta_der = 0;
+    double a_der = 0;
+
+
     
     for (int t = 0; t < N; t++) {
-      fg[0] += k_cte * CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
-      fg[0] += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
+      cte_error += k_cte * CppAD::pow(vars[cte_start + t], 2);
+      psi_error += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
+      vel_error += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
     // Minimize the use of actuators.
     for (int t = 0; t < N - 1; t++) {
-      fg[0] += k_d1 * CppAD::pow(vars[delta_start + t], 2);
-      fg[0] += k_a1 * CppAD::pow(vars[a_start + t], 2);
+      delta_cum += k_d1 * CppAD::pow(vars[delta_start + t], 2);
+      a_cum += k_a1 * CppAD::pow(vars[a_start + t], 2);
     }
     // Minimize the value gap between sequential actuations.
     for (int t = 0; t < N - 2; t++) {
-      fg[0] += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-      fg[0] += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+      delta_der += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      a_der += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
+    f[0] = cte_error +  psi_error + vel_error + delta_cum + a_cum + delta_der + a_der;
+    cout << "cte_error " << cte_error << endl; 
+    cout << "psi_error " << psi_error << endl;
+    cout << "vel_error " << vel_error << endl;
+    cout << "delta_cum " << delta_cum << endl;
+    cout << "a_cum " << a_cum << endl;
+    cout << "delta_der " << delta_der << endl;    
+    cout << "a_der " << a_der << endl;    
+    
+
     // Setup Constraints
     // current state: no need to calculate just grap the inputs
     fg[1 + x_start] = vars[x_start];
