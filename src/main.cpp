@@ -174,15 +174,8 @@ int main() {
           dt = 0.05;
           auto solution = mpc.Solve(current_state, coeffs);
           
-          double steer_value = 0;
-          double throttle_value = 0;
-
-          steer_value = solution[0]/deg2rad(25);
-          throttle_value = solution[1];
-          std::cout << "steer_value" << std::endl;
-          std::cout << steer_value << std::endl;
-          std::cout << "throttle_value" << std::endl;
-          std::cout << throttle_value << std::endl;
+          double steer_value = solution[0]/deg2rad(25);
+          double throttle_value = solution[1];          
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
