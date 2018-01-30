@@ -166,7 +166,7 @@ int main() {
           }
 
           //double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
-          double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
+          double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
           std::cout << "epsi" << std::endl;
           std::cout << epsi << std::endl;
 
