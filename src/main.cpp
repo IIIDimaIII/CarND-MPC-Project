@@ -71,8 +71,7 @@ int main() {
   uWS::Hub h;
 
   // MPC is initialized here!
-  MPC mpc;
-  cout << "test" << endl;
+  MPC mpc;  
   //measuring how frequently the car receives telemetery data
   auto timestamp0 = std::chrono::high_resolution_clock::now();
   auto timestamp1 = std::chrono::high_resolution_clock::now();
@@ -100,6 +99,7 @@ int main() {
         string event = j[0].get<string>();
         if (event == "telemetry") {
           
+          /*
           double dt = 0;
           n +=1;         
 
@@ -124,7 +124,7 @@ int main() {
           }
           dts_prev = dts_curr;           
           cout << "dt " << dt << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();
+          timestamp0 = std::chrono::high_resolution_clock::now();*/
 
           //if (n >5) {
           //  return 0;
@@ -157,21 +157,15 @@ int main() {
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
-          // f'(x) = 3*a*x^2 + 2*b*x + c
-          
-          /*int x_direction = 0;
-          if (ptsx[0] > ptsx[1]){
-            x_direction = 1;
-          }*/
+          // f'(x) = 3*a*x^2 + 2*b*x + c          
          
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
           std::cout << "epsi" << std::endl;
           std::cout << epsi << std::endl;
 
           Eigen::VectorXd current_state(6);        
-          current_state << 0, 0, 0, v, cte, epsi;         
+          current_state << 0, 0, 0, v, cte, epsi;          
           
-          dt = 0.05;
           auto solution = mpc.Solve(current_state, coeffs);
           
           double steer_value = solution[0]/deg2rad(25);
