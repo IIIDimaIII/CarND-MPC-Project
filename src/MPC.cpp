@@ -50,7 +50,7 @@ class FG_eval {
     
     //adjusting contribution of different cost components to the total
     double k_cte = 3000;
-    double k_epsi = 6000;
+    double k_epsi = 8000;
     double k_v = 0.1;
 
     double k_d1 = 5.0;
@@ -275,7 +275,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
   cout << "solution" << endl;
-  for (int i = 0; i < n_vars; i++) {    
+  for (size_t i = 0; i < n_vars; i++) {    
     cout << solution.x[i] << endl;  
   }
  
