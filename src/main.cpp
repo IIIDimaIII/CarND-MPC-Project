@@ -160,8 +160,8 @@ int main() {
           // f'(x) = 3*a*x^2 + 2*b*x + c          
          
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
-          std::cout << "epsi" << std::endl;
-          std::cout << epsi << std::endl;
+          //std::cout << "epsi" << std::endl;
+          //std::cout << epsi << std::endl;
 
           Eigen::VectorXd current_state(6);        
           current_state << 0, 0, 0, v, cte, epsi;          
