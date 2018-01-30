@@ -190,6 +190,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, double&
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
   // TODO: Set lower and upper limits for variables.
+  for (int i = 0; i < y_start; i++) {
+    vars_lowerbound[i] = 0;
+    vars_upperbound[i] = 1.0e19;
+  } 
+  
+  
   for (int i = 0; i < delta_start; i++) {
     vars_lowerbound[i] = -1.0e19;
     vars_upperbound[i] = 1.0e19;
