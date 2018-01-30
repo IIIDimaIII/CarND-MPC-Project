@@ -93,7 +93,7 @@ class FG_eval {
       delta_cum += k_d1 * CppAD::pow(vars[delta_start + t], 2);
       a_cum += k_a1 * CppAD::pow(vars[a_start + t], 2);
     }
-    fg[0] += delta_cum + a_cum
+    fg[0] += delta_cum + a_cum;
     // Minimize the value gap between sequential actuations.
     for (size_t t = 0; t < N - 2; t++) {
       delta_der += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
