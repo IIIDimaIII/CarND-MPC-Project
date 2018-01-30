@@ -125,9 +125,9 @@ int main() {
           cout << "dt " << dt << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();*/
 
-          if (n >5) {
-            return 0;
-          }
+          //if (n >5) {
+          //  return 0;
+          //}
 
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
