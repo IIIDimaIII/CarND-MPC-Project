@@ -51,13 +51,13 @@ class FG_eval {
     //adjusting contribution of different cost components to the total
     double k_cte = 3000;
     double k_epsi = 7000;
-    double k_v = 0.01;
+    double k_v = 0.1;
 
-    double k_d1 = 5;
-    double k_a1 = 5;
+    double k_d1 = 5.0;
+    double k_a1 = 5.0;
     
-    double k_d2 = 20;
-    double k_a2 = 1;
+    double k_d2 = 20.0;
+    double k_a2 = 1.0;
 
     AD<double> cte_error = 0;
     AD<double> psi_error = 0;
@@ -67,7 +67,7 @@ class FG_eval {
     AD<double> delta_der = 0;
     AD<double> a_der = 0;
     
-    /*for (size_t i = 0; i < N; i++) {
+    for (size_t i = 0; i < N; i++) {
       fg[0] += 3000*CppAD::pow(vars[cte_start + i], 2);
       fg[0] += 3000*CppAD::pow(vars[epsi_start + i], 2);
       fg[0] += CppAD::pow(vars[v_start + i] - ref_v, 2);
@@ -81,8 +81,8 @@ class FG_eval {
     for (size_t i = 0; i < N - 2; i++) {
       fg[0] += 200*CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
       fg[0] += 10*CppAD::pow(vars[a_start + i + 1] - vars[a_start + i], 2);
-    }*/
-    for (size_t t = 0; t < N; t++) {
+    }
+    /*for (size_t t = 0; t < N; t++) {
       cte_error += k_cte * CppAD::pow(vars[cte_start + t], 2);
       psi_error += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
       vel_error += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
@@ -99,7 +99,7 @@ class FG_eval {
       delta_der += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       a_der += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
-    fg[0] +=  delta_der + a_der;
+    fg[0] +=  delta_der + a_der;*/
 
     cout << "cte_error " << cte_error << endl; 
     cout << "psi_error " << psi_error << endl;
