@@ -7,8 +7,8 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
-size_t N = 20;
-//double dt = 0.052;
+size_t N = 10;
+double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -29,7 +29,7 @@ size_t psi_start = y_start + N;
 size_t v_start = psi_start + N;
 size_t cte_start = v_start + N;
 size_t epsi_start = cte_start + N;
-size_t delta_start = epsi_start + 1;
+size_t delta_start = epsi_start + N;
 size_t a_start = delta_start + N - 1;
 
 
@@ -37,14 +37,10 @@ class FG_eval {
  public:
   // Fitted polynomial coefficients
   Eigen::VectorXd coeffs;
-  //int x_dir = 0; //test
-  double dt = 1; //dummy initiation
-  //FG_eval(Eigen::VectorXd coeffs, int d, double t) { this->coeffs = coeffs; this->x_dir = d; this->dt = t; }
-  FG_eval(Eigen::VectorXd coeffs, double t) { this->coeffs = coeffs; this->dt = t; }
+  FG_eval(Eigen::VectorXd coeffs) { this->coeffs = coeffs; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
-  void operator()(ADvector& fg, const ADvector& vars) {
-    // TODO: implement MPC
+  void operator()(ADvector& fg, const ADvector& vars) {    
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
     // NOTE: You'll probably go back and forth between this function and
     // the Solver function below.
@@ -103,9 +99,7 @@ class FG_eval {
     fg[1 + v_start] = vars[v_start];
     fg[1 + cte_start] = vars[cte_start];
     fg[1 + epsi_start] = vars[epsi_start];        
-    // The rest of the constraints - future steps
-    //AD<double> dir = vars[0];
-    //int x_dir = vars[0];        
+    // The rest of the constraints - future steps       
     for (int t = 1; t < N; t++) {
       // The state at time t+1 .      
       AD<double> x1 = vars[x_start + t];
@@ -237,7 +231,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, double&
 
   // object that computes objective and constraints
   //FG_eval fg_eval(coeffs); 
-  FG_eval fg_eval(coeffs, dt); 
+  FG_eval fg_eval(coeffs); 
 
   //
   // NOTE: You don't have to worry about these options

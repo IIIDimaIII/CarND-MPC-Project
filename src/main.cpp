@@ -151,15 +151,8 @@ int main() {
           
           //approximate target x and y values for the space in between waypoints 
           
-          auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
-          
-          //std::cout << "coeffs" << std::endl;
-          //std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
-          
+          auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);          
           double cte = 0 - polyeval(coeffs, 0);
-          
-          //std::cout << "cte" << std::endl;
-          //std::cout << cte << std::endl;
           
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
@@ -170,19 +163,16 @@ int main() {
           if (ptsx[0] > ptsx[1]){
             x_direction = 1;
           }*/
-
-          //double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
+         
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
           std::cout << "epsi" << std::endl;
           std::cout << epsi << std::endl;
 
-          Eigen::VectorXd current_state(6);
-          //current_state << px, py, psi, v, cte, epsi;
-          current_state << 0, 0, 0, v, cte, epsi;
+          Eigen::VectorXd current_state(6);        
+          current_state << 0, 0, 0, v, cte, epsi;         
           
-          //auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
           dt = 0.05;
-          auto solution = mpc.Solve(current_state, coeffs, dt);
+          auto solution = mpc.Solve(current_state, coeffs);
           
           double steer_value = 0;
           double throttle_value = 0;
