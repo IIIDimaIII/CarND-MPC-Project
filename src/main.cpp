@@ -181,6 +181,7 @@ int main() {
           current_state << 0, 0, 0, v, cte, epsi;
           
           //auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
+          //dt = 0.05;
           auto solution = mpc.Solve(current_state, coeffs, dt);
           
           double steer_value = 0;
