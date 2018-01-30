@@ -7,7 +7,7 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
-size_t N = 75;
+size_t N = 20;
 //double dt = 0.052;
 
 // This value assumes the model presented in the classroom is used.
@@ -136,7 +136,7 @@ class FG_eval {
       fg[1 + cte_start + t] = cte1 - 
                               ((y0 + v0 * CppAD::sin(psi0) * dt) - 
                               coeffs[0] + coeffs[1] * x1_target + coeffs[2] * CppAD::pow(x1_target,2) + coeffs[3] * CppAD::pow(x1_target,3));
-      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 / Lf * delta0 * dt);            
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0 / Lf * delta0 * dt);            
      
       //fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
       //fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 / Lf * delta0 * dt);            
@@ -150,11 +150,8 @@ class FG_eval {
 MPC::MPC() {}
 MPC::~MPC() {}
 
-//vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
-//vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction, double& dt) {
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, double& dt) {
-  bool ok = true;
-  //size_t i;
+  bool ok = true;  
   typedef CPPAD_TESTVECTOR(double) Dvector;
   
   double x = state[0];
