@@ -46,7 +46,7 @@ class FG_eval {
     // the Solver function below.
     fg[0] = 0;    
     // The part of the cost based on the reference state.
-    double ref_v = 70.;
+    double ref_v = 150.;
     
     //adjusting contribution of different cost components to the total
     double k_cte = 1;
@@ -67,22 +67,7 @@ class FG_eval {
     AD<double> delta_der = 0;
     AD<double> a_der = 0;
     
-    /*for (size_t i = 0; i < N; i++) {
-      fg[0] += 3000*CppAD::pow(vars[cte_start + i], 2);
-      fg[0] += 3000*CppAD::pow(vars[epsi_start + i], 2);
-      fg[0] += CppAD::pow(vars[v_start + i] - ref_v, 2);      
-    }
-
-    for (size_t i = 0; i < N - 1; i++) {
-      fg[0] += 5*CppAD::pow(vars[delta_start + i], 2);
-      fg[0] += 5*CppAD::pow(vars[a_start + i], 2);
-      delta_cum += 5*CppAD::pow(vars[delta_start + i], 2);
-    }
-
-    for (size_t i = 0; i < N - 2; i++) {
-      fg[0] += 200*CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
-      fg[0] += 10*CppAD::pow(vars[a_start + i + 1] - vars[a_start + i], 2);
-    }*/
+    
     for (size_t t = 0; t < N; t++) {
       cte_error += k_cte * CppAD::pow(vars[cte_start + t], 2);
       psi_error += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
