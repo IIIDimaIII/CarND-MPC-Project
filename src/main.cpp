@@ -99,10 +99,12 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          double dt = 3.3;
-          n +=1;
           
-          /*MEASURE TIME FROM MESSAGE TO MESSAGE
+          double dt = 0;
+          n +=1;         
+
+          //DYNAMIC dt
+          //MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           
           for (int i = dts_curr.size()-2; i>=0; i-- ){
@@ -113,8 +115,7 @@ int main() {
           for (int i = 0; i < dts_curr.size();i++){
             dts_sum += dts_curr[i];
           }
-
-          double dt = 0.001;
+          
           if (n < dts_curr.size()){
             dt = dts_sum / (n * 1.);
           }
@@ -123,7 +124,7 @@ int main() {
           }
           dts_prev = dts_curr;           
           cout << "dt " << dt << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();*/
+          timestamp0 = std::chrono::high_resolution_clock::now();
 
           //if (n >5) {
           //  return 0;
@@ -149,21 +150,26 @@ int main() {
 
           
           //approximate target x and y values for the space in between waypoints 
+          
           auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
-          std::cout << "coeffs" << std::endl;
-          std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
+          
+          //std::cout << "coeffs" << std::endl;
+          //std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
+          
           double cte = 0 - polyeval(coeffs, 0);
-          std::cout << "cte" << std::endl;
-          std::cout << cte << std::endl;
+          
+          //std::cout << "cte" << std::endl;
+          //std::cout << cte << std::endl;
+          
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
           // f'(x) = 3*a*x^2 + 2*b*x + c
           
-          int x_direction = 0;
+          /*int x_direction = 0;
           if (ptsx[0] > ptsx[1]){
             x_direction = 1;
-          }
+          }*/
 
           //double epsi = psi - (atan(coeffs[1] + 2 * coeffs[2] * px  + 3 * coeffs[3] * px * px) + x_direction * M_PI); 
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
@@ -173,7 +179,9 @@ int main() {
           Eigen::VectorXd current_state(6);
           //current_state << px, py, psi, v, cte, epsi;
           current_state << 0, 0, 0, v, cte, epsi;
-          auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
+          
+          //auto solution = mpc.Solve(current_state, coeffs, x_direction, dt);
+          auto solution = mpc.Solve(current_state, coeffs, dt);
           
           double steer_value = 0;
           double throttle_value = 0;

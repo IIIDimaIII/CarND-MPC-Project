@@ -37,9 +37,10 @@ class FG_eval {
  public:
   // Fitted polynomial coefficients
   Eigen::VectorXd coeffs;
-  int x_dir = 0; //test
-  double dt = 1.5;
-  FG_eval(Eigen::VectorXd coeffs, int d, double t) { this->coeffs = coeffs; this->x_dir = d; this->dt = t; }
+  //int x_dir = 0; //test
+  double dt = 1; //dummy initiation
+  //FG_eval(Eigen::VectorXd coeffs, int d, double t) { this->coeffs = coeffs; this->x_dir = d; this->dt = t; }
+  FG_eval(Eigen::VectorXd coeffs, double t) { this->coeffs = coeffs; this->dt = t; }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
@@ -150,7 +151,8 @@ MPC::MPC() {}
 MPC::~MPC() {}
 
 //vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
-vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction, double& dt) {
+//vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_direction, double& dt) {
+vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, double& dt) {
   bool ok = true;
   //size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
@@ -232,7 +234,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, int& x_
 
   // object that computes objective and constraints
   //FG_eval fg_eval(coeffs); 
-  FG_eval fg_eval(coeffs, x_direction, dt); 
+  FG_eval fg_eval(coeffs, dt); 
 
   //
   // NOTE: You don't have to worry about these options
