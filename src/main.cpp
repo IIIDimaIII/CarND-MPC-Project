@@ -99,7 +99,7 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          double dt = 0.2;
+          double dt = 1.5;
           n +=1;
           
           /*MEASURE TIME FROM MESSAGE TO MESSAGE
