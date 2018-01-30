@@ -99,7 +99,7 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          double dt = 1.5;
+          double dt = 3.3;
           n +=1;
           
           /*MEASURE TIME FROM MESSAGE TO MESSAGE
@@ -152,7 +152,7 @@ int main() {
           auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
           std::cout << "coeffs" << std::endl;
           std::cout << "c0: " <<coeffs[0] << ",c1: "<<coeffs[1] << ",c2: "<< coeffs[2] <<",c3: "<< coeffs[3] << std::endl;
-          double cte = polyeval(coeffs, 0) - 0;
+          double cte = 0 - polyeval(coeffs, 0);
           std::cout << "cte" << std::endl;
           std::cout << cte << std::endl;
           // desired psi is a derivative of polynomial f(x) at x:
