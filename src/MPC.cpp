@@ -7,7 +7,7 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 //telemetry comes at the average frequency of 155 milliseconds + lag
-size_t N = 100;
+size_t N = 40;
 double dt = 0.025;
 
 // This value assumes the model presented in the classroom is used.
