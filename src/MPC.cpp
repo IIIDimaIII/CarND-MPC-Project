@@ -127,10 +127,8 @@ class FG_eval {
       fg[1 + psi_start + t] = psi1 - (psi0 - v0  / Lf * delta0 * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
       AD<double> x1_target = (x0 + v0 * CppAD::cos(psi0) * dt);
-      fg[1 + cte_start + t] = cte1 - 
-                              ((y0 + v0 * CppAD::sin(psi0) * dt) - 
-                              coeffs[0] + coeffs[1] * x1_target + coeffs[2] * CppAD::pow(x1_target,2) + coeffs[3] * CppAD::pow(x1_target,3));
-      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0 / Lf * delta0 * dt);            
+      fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0/Lf * delta * dt);        
      
       //fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
       //fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 / Lf * delta0 * dt);            
@@ -187,7 +185,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   } 
   
   
-  for (int i = 0; i < delta_start; i++) {
+  for (int i = y_start; i < delta_start; i++) {
     vars_lowerbound[i] = -1.0e19;
     vars_upperbound[i] = 1.0e19;
   }  
