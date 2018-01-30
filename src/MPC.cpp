@@ -70,12 +70,13 @@ class FG_eval {
     for (size_t i = 0; i < N; i++) {
       fg[0] += 3000*CppAD::pow(vars[cte_start + i], 2);
       fg[0] += 3000*CppAD::pow(vars[epsi_start + i], 2);
-      fg[0] += CppAD::pow(vars[v_start + i] - ref_v, 2);
+      fg[0] += CppAD::pow(vars[v_start + i] - ref_v, 2);      
     }
 
     for (size_t i = 0; i < N - 1; i++) {
       fg[0] += 5*CppAD::pow(vars[delta_start + i], 2);
       fg[0] += 5*CppAD::pow(vars[a_start + i], 2);
+      delta_cum += 5*CppAD::pow(vars[delta_start + i], 2);
     }
 
     for (size_t i = 0; i < N - 2; i++) {
