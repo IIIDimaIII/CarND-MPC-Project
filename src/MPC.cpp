@@ -50,8 +50,8 @@ class FG_eval {
     
     //adjusting contribution of different cost components to the total
     double k_cte = 3000;
-    double k_epsi = 5000;
-    double k_v = 0.5;
+    double k_epsi = 7000;
+    double k_v = 0.01;
 
     double k_d1 = 5;
     double k_a1 = 5;
