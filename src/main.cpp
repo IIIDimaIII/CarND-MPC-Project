@@ -143,7 +143,8 @@ int main() {
           }
           dv_prev = dv_curr;
           v_prev = v;
-          cout << average_a << endl;
+          cout << "v " << average_a << endl;
+          cout << "average_a " << average_a << endl;
           
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
