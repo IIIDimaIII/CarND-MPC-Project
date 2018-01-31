@@ -99,7 +99,7 @@ int main() {
         string event = j[0].get<string>();
         if (event == "telemetry") {
           n +=1; 
-          /*
+          
           double dt = 0;
                   
 
@@ -107,7 +107,7 @@ int main() {
           //MEASURE TIME FROM MESSAGE TO MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           
-          for (int i = dts_curr.size()-2; i>=0; i-- ){
+          /*for (int i = dts_curr.size()-2; i>=0; i-- ){
             dts_curr[i] = dts_prev[i+1];
           }
           dts_curr[dts_curr.size() - 1] = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
@@ -122,11 +122,11 @@ int main() {
           else {
             dt = dts_sum / (dts_curr.size() * 1.);
           }
-          dts_prev = dts_curr;           
-          cout << "dt " << dt << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();*/
+          dts_prev = dts_curr;           */
+          cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
+          timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >5) {
+          if (n >15) {
             return 0;
           }
 
