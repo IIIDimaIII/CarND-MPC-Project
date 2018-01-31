@@ -53,11 +53,11 @@ class FG_eval {
     double k_epsi = 200;
     double k_v = 0.0001;
 
-    double k_d1 = 0;
-    double k_a1 = 0;
+    double k_d1 = 1e6;
+    double k_a1 = 1e6;
     
-    double k_d2 = 0;
-    double k_a2 = 0;
+    double k_d2 = 1e6;
+    double k_a2 = 1e6;
 
     /*double k_cte = 2;
     double k_epsi = 50;
