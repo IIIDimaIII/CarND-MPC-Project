@@ -87,13 +87,13 @@ class FG_eval {
     }
     fg[0] +=  delta_der + a_der;
 
-    cout << "cte_error " << cte_error << endl; 
+    /*cout << "cte_error " << cte_error << endl; 
     cout << "psi_error " << psi_error << endl;
     cout << "vel_error " << vel_error << endl;
     cout << "delta_cum " << delta_cum << endl;
     cout << "a_cum " << a_cum << endl;
     cout << "delta_der " << delta_der << endl;    
-    cout << "a_der " << a_der << endl;    
+    cout << "a_der " << a_der << endl;    */
     
 
     // Setup Constraints
