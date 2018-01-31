@@ -126,8 +126,10 @@ class FG_eval {
       AD<double> delta0 = vars[delta_start + t - 1];      
       AD<double> a0 = vars[a_start + t - 1];
       AD<double> throttle_to_acceleration = -0.1132 * v0 + 5.3603;      
-      AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
-      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));     
+      //AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2);
+      //AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));     
+      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0);    
       
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
@@ -161,7 +163,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // +
   // (number of actuators) * (number of timesteps predicted - 1)
   size_t n_vars = N * 6 + (N - 1) * 2;
-
   // the number of constraints: timesteps * number of independent variables
   size_t n_constraints = N * 6;
 

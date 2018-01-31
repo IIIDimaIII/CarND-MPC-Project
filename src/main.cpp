@@ -126,7 +126,7 @@ int main() {
           double v = j[1]["speed"] ;   
           v = v / 0.62137 * 1000./ 3600.; // convert to m/s
           //throttle to acceleration measurement
-          for (int i = dv_curr.size()-2; i>=0; i-- ){
+          /*for (int i = dv_curr.size()-2; i>=0; i-- ){
             dv_curr[i] = dv_prev[i+1];
           }
           dv_curr[dv_curr.size() - 1] = (v - v_prev) / dt;
@@ -144,7 +144,7 @@ int main() {
           dv_prev = dv_curr;
           v_prev = v;
           cout << "v " << v << endl;
-          cout << "average_a " << average_a << endl;
+          cout << "average_a " << average_a << endl;*/
           
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
@@ -159,7 +159,8 @@ int main() {
           
           //approximate target x and y values for the space in between waypoints 
           
-          auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);          
+          //auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);
+          auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 2);          
           double cte = 0 - polyeval(coeffs, 0);
           
           // desired psi is a derivative of polynomial f(x) at x:
@@ -167,7 +168,8 @@ int main() {
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
           // f'(x) = 3*a*x^2 + 2*b*x + c          
          
-          double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
+          //double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0)); 
+          double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0)); 
 
           Eigen::VectorXd current_state(6);        
           current_state << 0, 0, 0, v, cte, epsi;          
