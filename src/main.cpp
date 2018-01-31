@@ -84,8 +84,10 @@ int main() {
     dts_prev[i] = 0;
     dts_curr[i] = 0;
   }
+  double px_prev = 0;
+  double py_prev = 0;
   
-  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &dts_prev, &dts_curr](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &px_prev, &py_prev](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -121,6 +123,7 @@ int main() {
             dt = dts_sum / (dts_curr.size() * 1.);
           }
           dts_prev = dts_curr;           */
+          dt = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
           cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           cout << "time elapsed " << cum_time << endl;                
@@ -136,7 +139,15 @@ int main() {
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
-          double v = j[1]["speed"];
+          //double v = j[1]["speed"];          
+          double v = 0;
+          if (n > 0){
+            v = pow(d_x * d_x + d_y * d_y, 0.5) / dt;
+          }
+          
+          
+          
+          
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
           Eigen::VectorXd eptsy_vehicle(ptsy.size());
