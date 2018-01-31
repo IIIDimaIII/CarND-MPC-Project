@@ -142,6 +142,8 @@ int main() {
           //double v = j[1]["speed"];          
           double v = 0;
           if (n > 0){
+            double d_x = px_prev - px;
+            double d_y = py_prev - py;
             v = pow(d_x * d_x + d_y * d_y, 0.5) / dt;
           }
           
