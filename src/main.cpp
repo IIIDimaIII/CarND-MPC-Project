@@ -123,8 +123,8 @@ int main() {
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
-          double v = j[1]["speed"] / 0.62137 * 1000./ 3600.; // convert to m/s;   
-          
+          double v = j[1]["speed"] ;   
+          v = v / 0.62137 * 1000./ 3600.; // convert to m/s
           //throttle to acceleration measurement
           for (int i = dv_curr.size()-2; i>=0; i-- ){
             dv_curr[i] = dv_prev[i+1];
