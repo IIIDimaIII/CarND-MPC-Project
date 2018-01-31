@@ -73,7 +73,7 @@ int main() {
   // MPC is initialized here!
   MPC mpc;  
   
-  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &dv_prev, &dv_curr, &v_prev](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -86,11 +86,6 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-
-          /*if (n >500) {
-            return 0;
-          }*/
-
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
           vector<double> ptsy = j[1]["ptsy"]; // 6 datapoints
