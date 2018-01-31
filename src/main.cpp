@@ -101,17 +101,17 @@ int main() {
         if (event == "telemetry") {
           n +=1; 
           
-          double dt = 0;
+          //double dt = 0;
           
           //MEASURE TIME FROM PREVIOUS TELEMETRY MESSAGE
-          timestamp1 = std::chrono::high_resolution_clock::now();
+          /*timestamp1 = std::chrono::high_resolution_clock::now();
           
           
           dt = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
           cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           cout << "time elapsed " << cum_time << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();
+          timestamp0 = std::chrono::high_resolution_clock::now();*/
 
           /*if (n >500) {
             return 0;
@@ -149,7 +149,7 @@ int main() {
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
           Eigen::VectorXd eptsy_vehicle(ptsy.size());
-          for (int i = 0; i < ptsx.size(); i++){
+          for (size_t i = 0; i < ptsx.size(); i++){
             double dx = ptsx[i] - px;
             double dy = ptsy[i] - py;
             eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
@@ -193,7 +193,7 @@ int main() {
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
-          for(int i = 2; i < solution.size(); i+=2){
+          for(size_t i = 2; i < solution.size(); i+=2){
             mpc_x_vals.push_back(solution[i]);
             mpc_y_vals.push_back(solution[i+1]);
           }
@@ -208,7 +208,7 @@ int main() {
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
           //convert to vehicle's coordinates
-          for( int i = 0; i < ptsx.size(); i++) {
+          for(size_t i = 0; i < ptsx.size(); i++) {
             double dx = ptsx[i] - px;
             double dy = ptsy[i] - py;
             next_x_vals.push_back(dx * cos(-psi) - dy * sin(-psi));
