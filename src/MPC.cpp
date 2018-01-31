@@ -134,8 +134,9 @@ class FG_eval {
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 - v0  / Lf * delta0 * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * throttle_to_acceleration * dt);      
-      fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0/Lf * delta0 * dt);                   
+      //fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+      fg[1 + cte_start + t] = cte1 - ((y0 - v0 * CppAD::sin(epsi0) * dt) - f0);
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - - v0/Lf * delta0 * dt) - psides0);                   
     }    
   }
 };
@@ -184,8 +185,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   vars[y_start] = y + v * CppAD::sin(psi) * latency;  
   vars[psi_start] = psi;  
   vars[v_start] = v;  
-  vars[cte_start] = coeffs[0] + coeffs[1] * vars[x_start] + coeffs[2] * CppAD::pow(vars[x_start],2) + coeffs[3] * CppAD::pow(vars[x_start],3) - //f1
-                    y - v * CppAD::sin(epsi) * latency;
+  vars[cte_start] = (y - v * CppAD::sin(epsi) * latency) - 
+                    coeffs[0] + coeffs[1] * vars[x_start] + coeffs[2] * CppAD::pow(vars[x_start],2) + coeffs[3] * CppAD::pow(vars[x_start],3);
   vars[epsi_start] = psi - (CppAD::atan(coeffs[1] + 2 * coeffs[2] * vars[x_start]  + 3 * coeffs[3] * CppAD::pow(vars[x_start],2)));
  
 
