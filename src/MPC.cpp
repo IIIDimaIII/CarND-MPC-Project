@@ -6,7 +6,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-//telemetry comes at the average frequency of 155 milliseconds + lag
+
 size_t N = 10;
 double dt = 0.1;
 
@@ -172,12 +172,22 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     vars[i] = 0.0;   
   }  
   // Set the initial variable values  
-  vars[x_start] = x;  
+  /*vars[x_start] = x;  
   vars[y_start] = y;  
   vars[psi_start] = psi;  
   vars[v_start] = v;  
   vars[cte_start] = cte;  
-  vars[epsi_start] = epsi;   
+  vars[epsi_start] = epsi;  */
+  
+  double latency = 0.1; //sec
+  vars[x_start] = x + v * CppAD::cos(psi) * latency);
+  vars[y_start] = y + v * CppAD::sin(psi) * latency);  
+  vars[psi_start] = psi;  
+  vars[v_start] = v;  
+  vars[cte_start] = coeffs[0] + coeffs[1] * vars[x_start] + coeffs[2] * CppAD::pow(vars[x_start],2) + coeffs[3] * CppAD::pow(vars[x_start],3) - //f1
+                    y - v * CppAD::sin(epsi) * latency);
+  vars[epsi_start] = psi - (CppAD::atan(coeffs[1] + 2 * coeffs[2] * vars[x_start]  + 3 * coeffs[3] * CppAD::pow(vars[x_start],2)));
+ 
 
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
