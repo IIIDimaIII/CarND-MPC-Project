@@ -8,8 +8,8 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
-#include <ctime>
-#include <time.h>
+//#include <ctime>
+//#include <time.h>
 
 // for convenience
 using json = nlohmann::json;
@@ -72,19 +72,6 @@ int main() {
 
   // MPC is initialized here!
   MPC mpc;  
-  //measuring how frequently the car receives telemetery data
-  auto timestamp0 = std::chrono::high_resolution_clock::now();
-  auto timestamp1 = std::chrono::high_resolution_clock::now();
-  int n = 0; //counting telemetry messages
-  double cum_time = 0; // cum sum of time elapsed
-  int k = 10;
-  vector<double> dv_prev(k);
-  vector<double> dv_curr(k);
-  for(int i = 0; i < k; i++){
-    dv_prev[i] = 0;
-    dv_curr[i] = 0;
-  }
-  double v_prev = 0;  
   
   h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &dv_prev, &dv_curr, &v_prev](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
@@ -99,19 +86,6 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          n +=1; 
-          
-          //double dt = 0;
-          
-          //MEASURE TIME FROM PREVIOUS TELEMETRY MESSAGE
-          /*timestamp1 = std::chrono::high_resolution_clock::now();
-          
-          
-          dt = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
-          cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
-          cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
-          cout << "time elapsed " << cum_time << endl;                
-          timestamp0 = std::chrono::high_resolution_clock::now();*/
 
           /*if (n >500) {
             return 0;
@@ -125,26 +99,6 @@ int main() {
           double psi = j[1]["psi"];
           double v = j[1]["speed"] ;   
           v = v / 0.62137 * 1000./ 3600.; // convert to m/s
-          //throttle to acceleration measurement
-          /*for (int i = dv_curr.size()-2; i>=0; i-- ){
-            dv_curr[i] = dv_prev[i+1];
-          }
-          dv_curr[dv_curr.size() - 1] = (v - v_prev) / dt;
-          double dv_sum = 0;
-          for (int i = 0; i < dv_curr.size();i++){
-            dv_sum += dv_curr[i];
-          }
-          double average_a = 0;
-          if (n < dv_curr.size()){
-            average_a = dv_sum / (n * 1.);
-          }
-          else {
-            average_a = dv_sum / (dv_curr.size() * 1.);
-          }
-          dv_prev = dv_curr;
-          v_prev = v;
-          cout << "v " << v << endl;
-          cout << "average_a " << average_a << endl;*/
           
           //convert to vehicle coordinates
           Eigen::VectorXd eptsx_vehicle(ptsx.size());
@@ -154,18 +108,16 @@ int main() {
             double dy = ptsy[i] - py;
             eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
             eptsy_vehicle[i] = (dx * sin(-psi) + dy * cos(-psi));
-          } 
+          }          
           
-          
-          //approximate target x and y values for the space in between waypoints 
-          
+          //approximate target x and y values for the space in between waypoints           
           auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);          
           double cte = 0 - polyeval(coeffs, 0);
           
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:
           // f(x) = a*x^3 + b*x^2 + c*x + d, so
-          // f'(x) = 3*a*x^2 + 2*b*x + c          
+          // f'(x) = 3*a*x^2 + 2*b*x + c 
          
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0));           
 
@@ -178,10 +130,6 @@ int main() {
           double throttle_value = solution[1];          
 
           json msgJson;
-          // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
-          // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          //msgJson["steering_angle"] = 0;
-          //msgJson["throttle"] = 0.5;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = throttle_value;
 
@@ -219,15 +167,7 @@ int main() {
 
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
-          // Latency
-          // The purpose is to mimic real driving conditions where
-          // the car does actuate the commands instantly.
-          //
-          // Feel free to play around with this value but should be to drive
-          // around the track with 100ms latency.
-          //
-          // NOTE: REMEMBER TO SET THIS TO 100 MILLISECONDS BEFORE
-          // SUBMITTING.          
+          // Latency        
           this_thread::sleep_for(chrono::milliseconds(100));
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }

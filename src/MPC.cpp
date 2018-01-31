@@ -5,20 +5,8 @@
 
 using CppAD::AD;
 
-// TODO: Set the timestep length and duration
-
 size_t N = 15;
 double dt = 0.1;
-
-// This value assumes the model presented in the classroom is used.
-//
-// It was obtained by measuring the radius formed by running the vehicle in the
-// simulator around in a circle with a constant steering angle and velocity on a
-// flat terrain.
-//
-// Lf was tuned until the the radius formed by the simulating the model
-// presented in the classroom matched the previous radius.
-//
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
@@ -42,20 +30,15 @@ class FG_eval {
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {    
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
-    // NOTE: You'll probably go back and forth between this function and
-    // the Solver function below.
     fg[0] = 0;    
-    // The part of the cost based on the reference state.
-    double ref_v = 100. / 0.62137 * 1000./ 3600. ;
-    
+
+    double ref_v = 100. / 0.62137 * 1000./ 3600. ;    
     //adjusting contribution of different cost components to the total
     double k_cte = 2;
     double k_epsi = 1500;
     double k_v = 0.00015;
-
     double k_d1 = 0;
-    double k_a1 = 0;
-    
+    double k_a1 = 0;    
     double k_d2 = 4;
     double k_a2 = 0;
     
@@ -74,27 +57,16 @@ class FG_eval {
       vel_error += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
     fg[0] += cte_error +  psi_error + vel_error;
-    // Minimize the use of actuators.
     for (size_t t = 0; t < N - 1; t++) {
       delta_cum += k_d1 * CppAD::pow(vars[delta_start + t], 2);
       a_cum += k_a1 * CppAD::pow(vars[a_start + t], 2);
     }
     fg[0] += delta_cum + a_cum;
-    // Minimize the value gap between sequential actuations.
     for (size_t t = 0; t < N - 2; t++) {
       delta_der += k_d2 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       a_der += k_a2 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
     fg[0] +=  delta_der + a_der;
-
-    /*cout << "cte_error " << cte_error << endl; 
-    cout << "psi_error " << psi_error << endl;
-    cout << "vel_error " << vel_error << endl;
-    cout << "delta_cum " << delta_cum << endl;
-    cout << "a_cum " << a_cum << endl;
-    cout << "delta_der " << delta_der << endl;    
-    cout << "a_der " << a_der << endl; */
-    
 
     // Setup Constraints
     // current state: no need to calculate just grap the inputs
@@ -129,12 +101,10 @@ class FG_eval {
       AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0,2) + coeffs[3] * CppAD::pow(x0,3);
       AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0  + 3 * coeffs[3] * CppAD::pow(x0,2));     
       
-      
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 - v0  / Lf * delta0 * dt);
       fg[1 + v_start + t] = v1 - (v0 + a0 * throttle_to_acceleration * dt);      
-      //fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
       fg[1 + cte_start + t] = cte1 - ((y0 - v0 * CppAD::sin(epsi0) * dt) - f0);
       fg[1 + epsi_start + t] = epsi1 - ((psi0 - - v0/Lf * delta0 * dt) - psides0);                   
     }    
@@ -173,13 +143,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     vars[i] = 0.0;   
   }  
   // Set the initial variable values  
-  /*vars[x_start] = x;  
-  vars[y_start] = y;  
-  vars[psi_start] = psi;  
-  vars[v_start] = v;  
-  vars[cte_start] = cte;  
-  vars[epsi_start] = epsi;  */
-  
   double latency = 0.1; //sec
   vars[x_start] = x + v * CppAD::cos(psi) * latency;
   vars[y_start] = y + v * CppAD::sin(psi) * latency;  
@@ -192,12 +155,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
-  // TODO: Set lower and upper limits for variables.
   for (size_t i = 0; i < y_start; i++) {
     vars_lowerbound[i] = 0;
     vars_upperbound[i] = 1.0e19;
-  } 
-  
+  }  
   
   for (size_t i = y_start; i < delta_start; i++) {
     vars_lowerbound[i] = -1.0e19;
@@ -205,13 +166,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   }  
   // The upper and lower limits of delta are set to -25 and 25
   // degrees (values in radians).
-  // NOTE: Feel free to change this to something else.
   for (size_t i = delta_start; i < a_start; i++) {
     vars_lowerbound[i] = -0.436332;
     vars_upperbound[i] = 0.436332;
   }  
   // Acceleration/decceleration upper and lower limits.
-  // NOTE: Feel free to change this to something else.
   for (size_t i = a_start; i < n_vars; i++) {
 
     vars_lowerbound[i] = -1.0;
@@ -242,10 +201,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // object that computes objective and constraints   
   FG_eval fg_eval(coeffs); 
-
-  //
-  // NOTE: You don't have to worry about these options
-  //
   // options for IPOPT solver
   std::string options;
   // Uncomment this if you'd like more print information
@@ -271,15 +226,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // Check some of the solution values
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
-  /*cout << "solution" << endl;
-  for (size_t i = 0; i < n_vars; i++) {    
-    cout << solution.x[i] << endl;  
-  }*/
- 
-
   // Cost
   auto cost = solution.obj_value;
-  std::cout << "Cost " << cost << std::endl;
 
   vector<double> mpc_output;
   mpc_output.push_back(solution.x[delta_start]);
@@ -289,11 +237,5 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     mpc_output.push_back(solution.x[x_start + i]);
     mpc_output.push_back(solution.x[y_start + i]);
   }
-
-  // TODO: Return the first actuator values. The variables can be accessed with
-  // `solution.x[i]`.
-  //
-  // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
-  // creates a 2 element double vector.
   return mpc_output;
 }
