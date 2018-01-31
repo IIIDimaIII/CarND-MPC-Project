@@ -56,7 +56,7 @@ class FG_eval {
     double k_d1 = 0;
     double k_a1 = 0;
     
-    double k_d2 = 2;
+    double k_d2 = 4;
     double k_a2 = 0;
     
     AD<double> cte_error = 0;
