@@ -78,16 +78,15 @@ int main() {
   int n = 0; //counting telemetry messages
   double cum_time = 0; // cum sum of time elapsed
   int k = 10;
-  vector<double> dts_prev(k);
-  vector<double> dts_curr(k);
+  vector<double> dv_prev(k);
+  vector<double> dv_curr(k);
   for(int i = 0; i < k; i++){
-    dts_prev[i] = 0;
-    dts_curr[i] = 0;
+    dv_prev[i] = 0;
+    dv_curr[i] = 0;
   }
-  double px_prev = 0;
-  double py_prev = 0;
+  double v_prev = 0;  
   
-  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &px_prev, &py_prev](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &timestamp0, &timestamp1, &n, &cum_time, &dv_prev, &dv_curr](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -107,22 +106,7 @@ int main() {
           //MEASURE TIME FROM PREVIOUS TELEMETRY MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           
-          /*for (int i = dts_curr.size()-2; i>=0; i-- ){
-            dts_curr[i] = dts_prev[i+1];
-          }
-          dts_curr[dts_curr.size() - 1] = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
-          double dts_sum = 0;
-          for (int i = 0; i < dts_curr.size();i++){
-            dts_sum += dts_curr[i];
-          }
           
-          if (n < dts_curr.size()){
-            dt = dts_sum / (n * 1.);
-          }
-          else {
-            dt = dts_sum / (dts_curr.size() * 1.);
-          }
-          dts_prev = dts_curr;           */
           dt = std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
           cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
           cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
@@ -139,17 +123,7 @@ int main() {
           double px = j[1]["x"]; 
           double py = j[1]["y"]; 
           double psi = j[1]["psi"];
-          //double v = j[1]["speed"];          
-          double v = 0;
-          if (n > 0){
-            double d_x = px_prev - px;
-            double d_y = py_prev - py;
-            v = std::pow(d_x * d_x + d_y * d_y, 0.5) / dt;
-            cout << "v " << v << endl;
-          }
-          px_prev = px;
-          py_prev = py;
-          
+          double v = j[1]["speed"] / 0.62137 * 1000./ 3600.  // convert to m/s;   
           
           
           //convert to vehicle coordinates
@@ -161,8 +135,25 @@ int main() {
             eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
             eptsy_vehicle[i] = (dx * sin(-psi) + dy * cos(-psi));
           } 
-          
-
+          //throttle to acceleration measurement
+          for (int i = dv_curr.size()-2; i>=0; i-- ){
+            dv_curr[i] = dv_prev[i+1];
+          }
+          dv_curr[dv_curr.size() - 1] = (v - v_prev) / dt;
+          double dv_sum = 0;
+          for (int i = 0; i < dv_curr.size();i++){
+            dv_sum += dv_curr[i];
+          }
+          double average_a = 0;
+          if (n < dv_curr.size()){
+            average_a = dv_sum / (n * 1.);
+          }
+          else {
+            average_a = dv_sum / (dv_curr.size() * 1.);
+          }
+          dv_prev = dv_curr;
+          v_prev = v;
+          cout << average_a << endl;
           
           //approximate target x and y values for the space in between waypoints 
           
