@@ -113,9 +113,9 @@ int main() {
           cout << "time elapsed " << cum_time << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >500) {
+          /*if (n >500) {
             return 0;
-          }
+          }*/
 
           // j[1] is the data JSON object
           vector<double> ptsx = j[1]["ptsx"]; // 6 datapoints
