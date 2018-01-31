@@ -53,22 +53,12 @@ class FG_eval {
     double k_epsi = 200;
     double k_v = 0.0001;
 
-    double k_d1 = 1e6;
-    double k_a1 = 1e6;
+    double k_d1 = 0;
+    double k_a1 = 0;
     
-    double k_d2 = 1e6;
-    double k_a2 = 1e6;
-
-    /*double k_cte = 2;
-    double k_epsi = 50;
-    double k_v = 0.05;
-
-    double k_d1 = 5.0;
-    double k_a1 = 5.0;
+    double k_d2 = 0;
+    double k_a2 = 0;
     
-    double k_d2 = 20.0;
-    double k_a2 = 1.0;*/
-
     AD<double> cte_error = 0;
     AD<double> psi_error = 0;
     AD<double> vel_error = 0;
@@ -97,13 +87,13 @@ class FG_eval {
     }
     fg[0] +=  delta_der + a_der;
 
-    cout << "cte_error " << cte_error << endl; 
+    /*cout << "cte_error " << cte_error << endl; 
     cout << "psi_error " << psi_error << endl;
     cout << "vel_error " << vel_error << endl;
     cout << "delta_cum " << delta_cum << endl;
     cout << "a_cum " << a_cum << endl;
     cout << "delta_der " << delta_der << endl;    
-    cout << "a_der " << a_der << endl; 
+    cout << "a_der " << a_der << endl; */
     
 
     // Setup Constraints
