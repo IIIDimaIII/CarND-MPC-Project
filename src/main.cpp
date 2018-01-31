@@ -129,7 +129,7 @@ int main() {
           cout << "time elapsed " << cum_time << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >20) {
+          if (n >100) {
             return 0;
           }
 
