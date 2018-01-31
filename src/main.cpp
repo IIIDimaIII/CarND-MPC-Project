@@ -143,7 +143,7 @@ int main() {
           }
           dv_prev = dv_curr;
           v_prev = v;
-          cout << "v " << average_a << endl;
+          cout << "v " << v << endl;
           cout << "average_a " << average_a << endl;
           
           //convert to vehicle coordinates
