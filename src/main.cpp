@@ -101,10 +101,8 @@ int main() {
           n +=1; 
           
           double dt = 0;
-                  
-
-          //DYNAMIC dt
-          //MEASURE TIME FROM MESSAGE TO MESSAGE
+          
+          //MEASURE TIME FROM PREVIOUS TELEMETRY MESSAGE
           timestamp1 = std::chrono::high_resolution_clock::now();
           
           /*for (int i = dts_curr.size()-2; i>=0; i-- ){
@@ -124,9 +122,11 @@ int main() {
           }
           dts_prev = dts_curr;           */
           cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
+          dt += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
+          cout << "time elapsed " << dt << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();
 
-          if (n >15) {
+          if (n >250) {
             return 0;
           }
 
