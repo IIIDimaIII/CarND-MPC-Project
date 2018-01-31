@@ -147,7 +147,8 @@ int main() {
             v = std::pow(d_x * d_x + d_y * d_y, 0.5) / dt;
             cout << "v " << v << endl;
           }
-          
+          px_prev = px;
+          py_prev = py;
           
           
           
