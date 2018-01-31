@@ -125,16 +125,6 @@ int main() {
           double psi = j[1]["psi"];
           double v = j[1]["speed"] / 0.62137 * 1000./ 3600.  // convert to m/s;   
           
-          
-          //convert to vehicle coordinates
-          Eigen::VectorXd eptsx_vehicle(ptsx.size());
-          Eigen::VectorXd eptsy_vehicle(ptsy.size());
-          for (int i = 0; i < ptsx.size(); i++){
-            double dx = ptsx[i] - px;
-            double dy = ptsy[i] - py;
-            eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
-            eptsy_vehicle[i] = (dx * sin(-psi) + dy * cos(-psi));
-          } 
           //throttle to acceleration measurement
           for (int i = dv_curr.size()-2; i>=0; i-- ){
             dv_curr[i] = dv_prev[i+1];
@@ -154,6 +144,17 @@ int main() {
           dv_prev = dv_curr;
           v_prev = v;
           cout << average_a << endl;
+          
+          //convert to vehicle coordinates
+          Eigen::VectorXd eptsx_vehicle(ptsx.size());
+          Eigen::VectorXd eptsy_vehicle(ptsy.size());
+          for (int i = 0; i < ptsx.size(); i++){
+            double dx = ptsx[i] - px;
+            double dy = ptsy[i] - py;
+            eptsx_vehicle[i] = (dx * cos(-psi) - dy * sin(-psi));
+            eptsy_vehicle[i] = (dx * sin(-psi) + dy * cos(-psi));
+          } 
+          
           
           //approximate target x and y values for the space in between waypoints 
           
