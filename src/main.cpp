@@ -98,10 +98,10 @@ int main() {
         auto j = json::parse(s);
         string event = j[0].get<string>();
         if (event == "telemetry") {
-          
+          n +=1; 
           /*
           double dt = 0;
-          n +=1;         
+                  
 
           //DYNAMIC dt
           //MEASURE TIME FROM MESSAGE TO MESSAGE
