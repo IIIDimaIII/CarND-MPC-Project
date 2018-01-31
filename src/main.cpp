@@ -122,8 +122,8 @@ int main() {
           }
           dts_prev = dts_curr;           */
           cout << "dt " << std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000. << endl;                
-          dt += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
-          cout << "time elapsed " << dt << endl;                
+          cum_time += std::chrono::duration<double, std::milli>(timestamp1 - timestamp0).count() /1000.;
+          cout << "time elapsed " << cum_time << endl;                
           timestamp0 = std::chrono::high_resolution_clock::now();
 
           if (n >250) {
