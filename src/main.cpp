@@ -43,6 +43,7 @@ double polyeval(Eigen::VectorXd coeffs, double x) {
   return result;
 }
 
+
 vector<double> prev_actuators = { 0, 0};
 
 // Fit a polynomial.
