@@ -50,7 +50,7 @@ class FG_eval {
     double k_v = 0.0005;
     double k_d1 = 2;
     double k_a1 = 0;    
-    double k_d2 = 1000; 
+    double k_d2 = 2000; 
     double k_a2 = 0;
 
 
