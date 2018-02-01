@@ -44,9 +44,9 @@ double polyeval(Eigen::VectorXd coeffs, double x) {
 }
 
 
-vector<double> prev_actuators(2);
-prev_actuators[0] = 0;
-prev_actuators[1] = 0;
+vector<double> prev_actuators;
+prev_actuators.push_back(0);
+prev_actuators.push_back(0);
 
 // Fit a polynomial.
 // Adapted from
