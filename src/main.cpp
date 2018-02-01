@@ -76,7 +76,7 @@ int main() {
   // MPC is initialized here!
   MPC mpc;  
   
-  h.onMessage([&mpc, double& prev_delta, double& prev_a](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &prev_delta, &prev_a](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
