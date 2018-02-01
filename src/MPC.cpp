@@ -32,7 +32,7 @@ class FG_eval {
     // `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
     fg[0] = 0;    
 
-    double ref_v = 80. / 0.62137 * 1000./ 3600. ;    
+    double ref_v = 60. / 0.62137 * 1000./ 3600. ;    
     //adjusting contribution of different cost components to the total
     /*
     size_t N = 12;
@@ -47,7 +47,7 @@ class FG_eval {
     
     double k_cte = 10;
     double k_epsi = 2500;
-    double k_v = 0.0005;
+    double k_v = 0.005;
     double k_d1 = 2;
     double k_a1 = 0;    
     double k_d2 = 2000; 
