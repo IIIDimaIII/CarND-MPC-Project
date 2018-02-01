@@ -107,7 +107,7 @@ int main() {
           
           //approximate target x and y values for the space in between waypoints           
           auto coeffs = polyfit(eptsx_vehicle, eptsy_vehicle, 3);          
-          double cte = 0 - polyeval(coeffs, 0);
+          double cte = polyeval(coeffs, 0) - 0;
           
           // desired psi is a derivative of polynomial f(x) at x:
           // for polynomial of order 3:

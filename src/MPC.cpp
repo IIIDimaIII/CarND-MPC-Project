@@ -121,12 +121,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   bool ok = true;  
   typedef CPPAD_TESTVECTOR(double) Dvector;
   
-  double x = state[0];
-  double y = state[1];
-  double psi = state[2];
-  double v = state[3];
-  double cte = state[4];
-  double epsi = state[5];
+  const double x = state[0];
+  const double y = state[1];
+  const double psi = state[2];
+  const double v = state[3];
+  const double cte = state[4];
+  const double epsi = state[5];
 
   
   // (number of independent variables) * (number of timesteps predicted)
@@ -148,7 +148,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   vars[y_start] = y + v * CppAD::sin(psi) * latency;  
   vars[psi_start] = psi;  
   vars[v_start] = v;  
-  vars[cte_start] = (y - v * CppAD::sin(epsi) * latency) - 
+  vars[cte_start] = (y - v * CppAD::sin(psi) * latency) - 
                     coeffs[0] + coeffs[1] * vars[x_start] + coeffs[2] * CppAD::pow(vars[x_start],2) + coeffs[3] * CppAD::pow(vars[x_start],3);
   vars[epsi_start] = psi - (CppAD::atan(coeffs[1] + 2 * coeffs[2] * vars[x_start]  + 3 * coeffs[3] * CppAD::pow(vars[x_start],2)));
  
