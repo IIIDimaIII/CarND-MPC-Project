@@ -43,8 +43,7 @@ double polyeval(Eigen::VectorXd coeffs, double x) {
   return result;
 }
 
-double prev_delta = 0;
-double prev_a = 0;
+
 
 // Fit a polynomial.
 // Adapted from
@@ -72,7 +71,8 @@ Eigen::VectorXd polyfit(Eigen::VectorXd xvals, Eigen::VectorXd yvals,
 
 int main() {
   uWS::Hub h;
-
+  double prev_delta = 0;
+  double prev_a = 0;
   // MPC is initialized here!
   MPC mpc;  
   
