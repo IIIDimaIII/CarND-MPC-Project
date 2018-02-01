@@ -46,7 +46,7 @@ class FG_eval {
     double k_a2 = 0;*/
     
     double k_cte = 10;
-    double k_epsi = 10000;
+    double k_epsi = 20000;
     double k_v = 0.0005;
     double k_d1 = 2;
     double k_a1 = 0;    
