@@ -34,6 +34,14 @@ class FG_eval {
 
     double ref_v = 100. / 0.62137 * 1000./ 3600. ;    
     //adjusting contribution of different cost components to the total
+    /*double k_cte = 10;
+    double k_epsi = 2500;
+    double k_v = 0.00015;
+    double k_d1 = 1;
+    double k_a1 = 0;    
+    double k_d2 = 100; 
+    double k_a2 = 0;*/
+    
     double k_cte = 10;
     double k_epsi = 2500;
     double k_v = 0.00015;
@@ -41,7 +49,8 @@ class FG_eval {
     double k_a1 = 0;    
     double k_d2 = 100; 
     double k_a2 = 0;
-    
+
+
     AD<double> cte_error = 0;
     AD<double> psi_error = 0;
     AD<double> vel_error = 0;
@@ -52,7 +61,7 @@ class FG_eval {
     
     
     for (size_t t = 0; t < N; t++) {
-      cte_error += k_cte * CppAD::pow(vars[cte_start + t], 2);
+      cte_error += k_cte * CppAD::pow(vars[cte_start + t], 4);
       psi_error += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
       vel_error += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
