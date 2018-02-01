@@ -43,8 +43,8 @@ double polyeval(Eigen::VectorXd coeffs, double x) {
   return result;
 }
 
-vector<double> prev_actuators (2);
-prev_actuators << 0, 0;
+vector<double> prev_actuators(2);
+prev_actuators = { 0, 0};
 // Fit a polynomial.
 // Adapted from
 // https://github.com/JuliaMath/Polynomials.jl/blob/master/src/Polynomials.jl#L676-L716
