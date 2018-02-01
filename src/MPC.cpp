@@ -64,7 +64,7 @@ class FG_eval {
     
     
     for (size_t t = 0; t < N; t++) {
-      cte_error += k_cte * CppAD::pow(vars[cte_start + t], 3);
+      cte_error += k_cte * CppAD::pow(vars[cte_start + t], 4);
       psi_error += k_epsi * CppAD::pow(vars[epsi_start + t], 2);
       vel_error += k_v * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }    
