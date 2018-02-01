@@ -127,6 +127,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   const double v = state[3];
   const double cte = state[4];
   const double epsi = state[5];
+  const double delta_prev = state[6];
+  const double a_prev = state[7];
 
   
   // (number of independent variables) * (number of timesteps predicted)
@@ -146,8 +148,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   double latency = 0.1; //sec
   vars[x_start] = x + v * CppAD::cos(psi) * latency;
   vars[y_start] = y + v * CppAD::sin(psi) * latency;  
-  vars[psi_start] = psi;  
-  vars[v_start] = v;  
+  vars[psi_start] = psi - v  / Lf * delta_prev * latency;  
+  vars[v_start] = v + a_prev * throttle_to_acceleration * latency;  
   vars[cte_start] = (y - v * CppAD::sin(psi) * latency) - 
                     coeffs[0] + coeffs[1] * vars[x_start] + coeffs[2] * CppAD::pow(vars[x_start],2) + coeffs[3] * CppAD::pow(vars[x_start],3);
   vars[epsi_start] = psi - (CppAD::atan(coeffs[1] + 2 * coeffs[2] * vars[x_start]  + 3 * coeffs[3] * CppAD::pow(vars[x_start],2)));
