@@ -35,11 +35,11 @@ class FG_eval {
     double ref_v = 100. / 0.62137 * 1000./ 3600. ;    
     //adjusting contribution of different cost components to the total
     double k_cte = 10;
-    double k_epsi = 2000;
+    double k_epsi = 0;
     double k_v = 0.00015;
     double k_d1 = 0;
     double k_a1 = 0;    
-    double k_d2 = 20; 
+    double k_d2 = 50; 
     double k_a2 = 0;
     
     AD<double> cte_error = 0;
