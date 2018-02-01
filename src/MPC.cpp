@@ -34,17 +34,6 @@ class FG_eval {
 
     double ref_v = 60. / 0.62137 * 1000./ 3600. ;    
     //adjusting contribution of different cost components to the total
-    /*
-    size_t N = 12;
-    double dt = 0.1;
-    double k_cte = 10;
-    double k_epsi = 2500;
-    double k_v = 0.0005;
-    double k_d1 = 2;
-    double k_a1 = 0;    
-    double k_d2 = 1000; 
-    double k_a2 = 0;*/
-    
     double k_cte = 10;
     double k_epsi = 3000;
     double k_v = 0.005;
@@ -81,7 +70,7 @@ class FG_eval {
     fg[0] +=  delta_der + a_der;
 
     // Setup Constraints
-    // current state: no need to calculate just grap the inputs
+    // current state
     fg[1 + x_start] = vars[x_start];
     fg[1 + y_start] = vars[y_start];
     fg[1 + psi_start] = vars[psi_start];
