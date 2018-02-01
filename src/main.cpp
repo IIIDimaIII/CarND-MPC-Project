@@ -43,10 +43,8 @@ double polyeval(Eigen::VectorXd coeffs, double x) {
   return result;
 }
 
-
-vector<double> prev_actuators;
-prev_actuators.push_back(0);
-prev_actuators.push_back(0);
+double prev_delta = 0;
+double prev_a = 0;
 
 // Fit a polynomial.
 // Adapted from
@@ -78,7 +76,7 @@ int main() {
   // MPC is initialized here!
   MPC mpc;  
   
-  h.onMessage([&mpc, &prev_actuators](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc, &prev_delta, &prev_a](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -122,14 +120,14 @@ int main() {
           double epsi = 0 - (atan(coeffs[1] + 2 * coeffs[2] * 0  + 3 * coeffs[3] * 0 * 0));           
 
           Eigen::VectorXd current_state(8);        
-          current_state << 0, 0, 0, v, cte, epsi, prev_actuators[0], prev_actuators[1];          
+          current_state << 0, 0, 0, v, cte, epsi, prev_delta, prev_a;          
           
           auto solution = mpc.Solve(current_state, coeffs);
           
           double steer_value = solution[0]/deg2rad(25);
           double throttle_value = solution[1];
-          prev_actuators[0] = steer_value;
-          prev_actuators[1] = throttle_value;
+          prev_delta = steer_value;
+          prev_a[1] = throttle_value;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
